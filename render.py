@@ -8,13 +8,15 @@ class Renderer:
     self.window = window
     self.event  = event
     self.map    = map
+    self.map_w  = map.getWidth()
+    self.map_h  = map.getHeight()
     event.register("update", self.update)
     
   def update(self):
     self.window.fill(pygame.Color(0,0,0))
     
-    for x in map.width:
-      for y in map.height:
+    for x in map_w:
+      for y in map_h:
         tile = map.getTile(x,y)
         if tile < 10:
           rect = pygame.Rect(64*tile, 0, 64, 64)
