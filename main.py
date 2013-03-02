@@ -2,7 +2,6 @@ from client import connect
 import pygame,sys
 from pygame.locals import *
 from map import *
-from tile import *
 from event import *
 from render import *
 
