@@ -7,32 +7,17 @@ from thread  import *
 players = []
 self_id = -1
 
-def parse(data):
-    global self_id
-
-    cmd = data[0]
-    msg = data[1:]
-
-    if cmd == 'c':
-        self_id = int(msg)
-    elif cmd == 't':
-        params = msg.split(',',1)
-        id = int(params[0])
-        if id != self_id:
-            print "[Player "+str(id+1)+"] "+params[1]
-
-def serverlisten(socket):
-    
-    while True:
-        data = socket.recv(1024)
-        if not data:
-            break
-        cmds = data.split(';')
-        for i in cmds:
-            if i:
-                parse(i)
+def serverlisten(socket,event):  
+  while True:
+    data = socket.recv(1024)
+    if not data:
+      break
+    cmds = data.split(';')
+    for i in cmds:
+      if i:
+        event.notify("cmd_recv", i)
 				
-def connect(ip, port):
+def connect(ip, port, event):
 	try:
 		#create an AF_INET, STREAM socket (TCP)
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -42,7 +27,7 @@ def connect(ip, port):
 
 	print 'Socket Created'
 	s.connect((ip,port))
-	start_new_thread(serverlisten ,(s,))
+	start_new_thread(serverlisten ,(s,event,))
 	return s
 	
 def disconnect(s):
