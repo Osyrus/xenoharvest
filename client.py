@@ -15,7 +15,7 @@ def serverlisten(socket,event):
     cmds = data.split(';')
     for i in cmds:
       if i:
-        event.notify("cmd_recv", i)
+        event.notify("cmdRecv", i)
         
 def connect(ip, port, event):
   try:

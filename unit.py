@@ -1,5 +1,5 @@
 #from map import *
-
+movespeed = 4
 class Unit:
   def __init__(self,x,y,event,map):
     self.x        = 64*x
@@ -16,17 +16,17 @@ class Unit:
     reached = True
     
     if self.x > 64*self.path[0][0]:
-      self.x -= 2
+      self.x -= 4
       reached = False
     elif self.x < 64*self.path[0][0]:
-      self.x += 2
+      self.x += 4
       reached = False
     
     if self.y > 64*self.path[0][1]:
-      self.y -= 2
+      self.y -= 4
       reached = False
     elif self.y < 64*self.path[0][1]:
-      self.y += 2
+      self.y += 4
       reached = False
       
     if reached:
