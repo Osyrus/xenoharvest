@@ -8,6 +8,7 @@ class Map:
 
     self.numTiles = 10
     self.tileWeighting = [50, 50, 50, 50, 50, 2, 1, 5, 4, 1]
+    self.passable = [True, True, True, True, True, False, False, False, False, False]
     self._normWeight(self.tileWeighting)
 
     self.fill()
@@ -29,6 +30,9 @@ class Map:
 
   def getHeight(self):
     return self.height
+
+  def isPassable(self, x, y):
+    return self.passable[self.tiles[y][x]]
 
   def _chooseTile(self):
     random.seed()
