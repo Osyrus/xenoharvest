@@ -53,4 +53,4 @@ while running:
   pygame.display.update()
   event.update()
   event.notify("update")
-  clock.tick(30)
+  clock.tick(1)

@@ -15,9 +15,9 @@ class Renderer:
   def update(self):
     self.window.fill(pygame.Color(0,0,0))
     
-    for x in map_w:
-      for y in map_h:
-        tile = map.getTile(x,y)
+    for x in range(self.map_w):
+      for y in range(self.map_h):
+        tile = self.map.getTile(x,y)
         if tile < 10:
           rect = pygame.Rect(64*tile, 0, 64, 64)
-          self.window.blit(tileSet, x*64, y*64, rect)
+          self.window.blit(tileSet, (x*64, y*64), rect)
