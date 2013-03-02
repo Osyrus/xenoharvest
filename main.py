@@ -1,4 +1,4 @@
-from client import connect
+from client import connect,disconnect
 import pygame,sys
 from pygame.locals import *
 from map import *
