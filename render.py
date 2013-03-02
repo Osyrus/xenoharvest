@@ -4,12 +4,13 @@ from pygame.locals import *
 tileSet = pygame.image.load(os.path.join("img","tiles.png"))
 
 class Renderer:
-  def __init__(self,window,event,map):
+  def __init__(self,window,event,map,units):
     self.window = window
     self.event  = event
     self.map    = map
     self.map_w  = map.getWidth()
     self.map_h  = map.getHeight()
+    self.units  = units
     event.register("update", self.update)
     
   def update(self):
@@ -21,3 +22,7 @@ class Renderer:
         if tile < 10:
           rect = pygame.Rect(64*tile, 0, 64, 64)
           self.window.blit(tileSet, (x*64, y*64), rect)
+        
+        
+    for i in self.units:
+      pygame.draw.circle(self.window,pygame.Color(0,255,0),(i.x+32,i.y+32),16)

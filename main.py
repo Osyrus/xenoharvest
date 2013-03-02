@@ -1,9 +1,10 @@
 from client import connect,disconnect
 import pygame,sys
 from pygame.locals import *
-from map import *
-from event import *
+from map    import *
+from event  import *
 from render import *
+from unit   import *
 
 socket = False
 
@@ -29,8 +30,10 @@ clock  = pygame.time.Clock()
 
 #Set up game
 map    = Map(10,10)
-render = Renderer(window, event, map)
-
+units  = []
+render = Renderer(window, event, map, units)
+units.append(Player(0,0,0,event,map))
+units[0].move(2,2)
 #Start running
 running = True
 
@@ -52,4 +55,4 @@ while running:
   pygame.display.update()
   event.update()
   event.notify("update")
-  clock.tick(1)
+  clock.tick(30)

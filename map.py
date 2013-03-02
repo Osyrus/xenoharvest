@@ -47,3 +47,24 @@ class Map:
 
     for x in range(0, self.numTiles):
       array[x] = array[x]/total
+      
+  def getPath(self,(x_i,y_i),(x_f,y_f)):
+    x = x_i
+    y = y_i
+    path = [(x,y)]
+    while x != x_f:
+      if x < x_f:
+        x += 1
+      else:
+        x -= 1
+      path.append((x,y))
+    
+    while y != y_f:
+      if y < y_f:
+        y += 1
+      else:
+        y -= 1
+      path.append((x,y))
+      
+    return path
+      
