@@ -1,8 +1,8 @@
 
 class Tile:
 
-  def __init__():
-    type = 0
+  def __init__(self):
+    self.type = 0
 
-  def setType(i):
-    type = i
+  def setType(self, i):
+    self.type = i
