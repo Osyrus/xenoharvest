@@ -18,6 +18,9 @@ class Map:
       for y in range(self.height):
         self.tiles[y][x] = _chooseTile()
 
+  def getTile(self, x, y):
+    return self.tiles[y][x]
+
   def _chooseTile():
     rand = random.random()
 
