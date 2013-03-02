@@ -1,7 +1,8 @@
 from client import connect
 import pygame,sys
 from pygame.locals import *
-from map,tile import *
+from map import *
+from tile import *
 
 #Connect to server
 ip     = "127.0.0.1" 
