@@ -6,6 +6,7 @@ from thread  import *
 
 players = []
 self_id = -1
+byteRec = 1024
 
 def parse(data):
     global self_id
@@ -24,7 +25,7 @@ def parse(data):
 def serverlisten(socket):
     
     while True:
-        data = socket.recv(1024)
+        data = socket.recv(byteRec)
         if not data:
             break
         cmds = data.split(';')
