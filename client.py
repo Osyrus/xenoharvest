@@ -9,13 +9,13 @@ self_id = -1
 
 def serverlisten(socket,event):  
   while True:
-  data = socket.recv(1024)
-  if not data:
-    break
-  cmds = data.split(';')
-  for i in cmds:
-    if i:
-    event.notify("cmd_recv", i)
+    data = socket.recv(1024)
+    if not data:
+      break
+    cmds = data.split(';')
+    for i in cmds:
+      if i:
+        event.notify("cmd_recv", i)
         
 def connect(ip, port, event):
   try:

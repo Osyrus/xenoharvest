@@ -4,6 +4,7 @@ from pygame.locals import *
 from map import *
 from tile import *
 from event import *
+from render import *
 
 socket = False
 
@@ -28,7 +29,8 @@ pygame.display.set_caption("XenoHarvest")
 clock  = pygame.time.Clock()
 
 #Set up game
-map   = Map(10,10)
+map    = Map(10,10)
+render = Renderer(window, event, map)
 
 #Start running
 running = True
@@ -48,11 +50,7 @@ while running:
 		elif e.type == VIDEORESIZE:
 			pygame.display.set_mode((e.size),pygame.RESIZABLE) 
 	
-  window.fill(pygame.Color(0,0,0));
-  for x in range(map.width):
-    for y in range(map.height):
-			pygame.draw.rect(window,pygame.Color(255,255,255),(32*x,32*y,32,32),1)
-	
   pygame.display.update()
   event.update()
+  event.notify("update")
   clock.tick(30)

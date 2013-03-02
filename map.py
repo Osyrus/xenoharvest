@@ -9,19 +9,20 @@ class Map:
 
     self.numTiles = 10
     self.tileWeighting = [50, 50, 50, 50, 50, 1, 1, 5, 4, 1]
-    _normWeight(self.tileWeighting)
+    self._normWeight(self.tileWeighting)
 
     self.fill()
 
   def fill(self):
     for x in range(self.width):
       for y in range(self.height):
-        self.tiles[y][x] = _chooseTile()
+        self.tiles[y][x] = self._chooseTile()
+
 
   def getTile(self, x, y):
     return self.tiles[y][x]
 
-  def _chooseTile():
+  def _chooseTile(self):
     rand = random.random()
 
     for i in range(len(self.tileWeighting)):
@@ -32,7 +33,7 @@ class Map:
 
     return 0
 
-  def _normWeight(array):
+  def _normWeight(self,array):
     total = sum(array)*1.0
 
     for x in range(0, self.numTiles):
