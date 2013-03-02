@@ -31,7 +31,6 @@ def parse(data,player):
   cmd = data[0]
   msg = data[1:]
 
-<<<<<<< HEAD
     if cmd == 't':
         print "[Player "+str(player.id+1)+"] "+msg
         broadcast("t"+str(player.id)+","+msg)
@@ -73,37 +72,6 @@ def clientthread(conn):
         cmds = data.split(';')
         for i in cmds:
             parse(i,player)
-=======
-  if cmd == 't':
-    print "[Player "+str(player.id+1)+"] "+msg
-    broadcast("t"+str(player.id)+","+msg)
-  elif cmd == 'm':
-    params = msg.split(',')
-    if params >= 2:
-      player.x += int(params[0])
-      player.y += int(params[1])
-    broadcast("m"+str(player.id)+","+params[0]+","+params[1])
-
-def broadcast(data):
-  global connections
-  data = data+';'
-  for i in connections:
-    i.sendall(data)
-
-#Function for handling connections. This will be used to create threads
-def clientthread(conn):
-  global player_count
-  global colours
-  player = Player()
-  player.id = player_count
-  player_count += 1
-  player.colour = colours[player.id]
-  conn.sendall("c"+str(player.id))
-  broadcast("a"+str(player.id)+","+str(player.colour)+","+str(player.x)+","+str(player.y))
-   
-  #infinite loop so that function do not terminate and thread do not end.
-  while True:
->>>>>>> f281856df02f5c837516a9c32c8f65779df65959
      
     #Receiving from client
     data = conn.recv(1024)
