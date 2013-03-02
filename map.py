@@ -21,6 +21,12 @@ class Map:
 
   def getTile(self, x, y):
     return self.tiles[y][x]
+  
+  def getWidth(self):
+    return self.width
+
+  def getHeight(self):
+    return self.height
 
   def _chooseTile(self):
     rand = random.random()
