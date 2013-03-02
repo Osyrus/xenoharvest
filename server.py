@@ -13,7 +13,7 @@ PORT = 8888 # Arbitrary non-privileged port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 print 'Socket created'
- 
+
 #Bind socket to local host and port
 try:
     s.bind((HOST, PORT))
@@ -34,18 +34,22 @@ def parse(data,player):
     if cmd == 't':
         print "[Player "+str(player.id+1)+"] "+msg
         broadcast("t"+str(player.id)+","+msg)
-    elif cmd == 'm':
+    if cmd == 'm':
         params = msg.split(',')
         if params >= 2:
             player.x += int(params[0])
             player.y += int(params[1])
         broadcast("m"+str(player.id)+","+params[0]+","+params[1])
+	if cmd == 'd':
+		#IMPLEMENT CORRECT DC HERE
+		print "DC"
 
 def broadcast(data):
     global connections
     data = data+';'
     for i in connections:
-        i.sendall(data)
+		if i != 0:
+			i.sendall(data)
 
 #Function for handling connections. This will be used to create threads
 def clientthread(conn):
@@ -55,8 +59,8 @@ def clientthread(conn):
     player.id = player_count
     player_count += 1
     player.colour = colours[player.id]
-    conn.sendall("c"+str(player.id))
-    broadcast("a"+str(player.id)+","+str(player.colour)+","+str(player.x)+","+str(player.y))
+    conn.sendall("c"+str(player.id)+";")
+    broadcast("a"+str(player.id)+","+str(player.colour)+","+str(player.x)+","+str(player.y)+";")
      
     #infinite loop so that function do not terminate and thread do not end.
     while True:
