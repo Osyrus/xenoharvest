@@ -14,14 +14,13 @@ class Map:
     self.fill()
 
   def fill(self):
-    for x in range(self.width):
-      for y in range(self.height):
+    for y in range(self.height):
+      for x in range(self.width):
         self.tiles[y][x] = self._chooseTile()
-
 
   def getTile(self, x, y):
     return self.tiles[y][x]
-  
+
   def getWidth(self):
     return self.width
 
