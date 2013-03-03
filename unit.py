@@ -2,14 +2,15 @@ import pygame
 import os
 
 class Unit(pygame.sprite.Sprite):
-  def __init__(self,x,y,event,map,group):
-    pygame.sprite.Sprite.__init__(self, group)
+  def __init__(self,x,y,event,map):
+    pygame.sprite.Sprite.__init__(self)
     self.path     = [(x,y)]
     self.event    = event
     self.map      = map
     self.image    = None
     self.rect     = pygame.Rect(0, 0, 64, 64)
     self.speed    = 4
+    self.facing   = 0
 
     self.rect.topleft = (x, y)
     event.register("update",self.update)
@@ -39,11 +40,15 @@ class Unit(pygame.sprite.Sprite):
         self.path.pop(0)
         
 class Player(Unit):
-  def __init__(self,x,y,id,event,map, group):
-    Unit.__init__(self,x,y,event,map, group)
+  def __init__(self,x,y,id,event,map):
+    Unit.__init__(self,x,y,event,map)
 
     self.id       = id
-    self.image    = pygame.image.load(os.path.join("img","player_b.png"))
+
+    if id == 0:
+      self.image = pygame.image.load(os.path.join("img","player_b.png"))
+    elif id == 1:
+      self.image = pygame.image.load(os.path.join("img","player_r.png"))
 
     event.register("playerMove",self.moveID)
 
