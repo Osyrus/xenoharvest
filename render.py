@@ -25,8 +25,6 @@ class Renderer:
           self.window.blit(tileSet, (x*64, y*64), rect)
         
     self.units.draw(self.window)
-    # for i in self.units:
-    #   pygame.draw.circle(self.window,pygame.Color(0,255,0),(i.x+32,i.y+32),16)
       
       
   def registerClick(self, pos, button, down):

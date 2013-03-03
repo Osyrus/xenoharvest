@@ -21,7 +21,6 @@ class Unit(pygame.sprite.Sprite):
     
   def update(self):
     reached = True
-    print(self.target)
     if self.rect.left > 64*self.target[0]:
       if self.bearing == 90:
         self.rect.move_ip(-self.speed, 0)
