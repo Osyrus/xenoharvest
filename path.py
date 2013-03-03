@@ -6,7 +6,6 @@ class Path:
     #Pull the width and height of the tiles object and associate the values to itself
     self.tiles = tiles
     self.height, self.width = self.tiles.getHeight(), self.tiles.getWidth()
-    print("Width = "+str(self.width)+", Height = "+str(self.height))
 
     #Preallocate a 2D boolean matrix
     self.graph = []
@@ -56,10 +55,8 @@ class Path:
         candidate = Node((parentX + sList[i][0], parentY + sList[i][1]), parent, end)
 
         #Check to see if the graph shows that the location is passable
-        print("x = "+str(candidate.getX())+", y = "+str(candidate.getY()))
         if candidate.getY() < self.height and candidate.getY() >= 0 and candidate.getX() < self.width and candidate.getX() >= 0:
           if self.graph[candidate.getY()][candidate.getX()] and candidate not in closed:
-            print "Passed as candidate"
             #Thanks to python, pretty much what it says
             if candidate not in possibles:
               #If it's not there, add it

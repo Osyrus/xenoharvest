@@ -26,14 +26,15 @@ else:
   socket = connect("127.0.0.1",port,event)
 
 #Set up pygame window
+mapSize = (20, 10)
 pygame.init()
-window = pygame.display.set_mode((1024,600),pygame.RESIZABLE)
+window = pygame.display.set_mode((64*mapSize[0],64*mapSize[1]),pygame.RESIZABLE)
 pygame.display.set_caption("XenoHarvest")
 clock  = pygame.time.Clock()
 
 #Set up game
 interface = Interface(socket,event)
-map       = Map(10,10)
+map       = Map(mapSize[0], mapSize[1])
 units     = []
 render    = Renderer(window, event, map, units)
 units.append(Player(0,0,0,event,map))
