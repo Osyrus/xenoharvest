@@ -1,32 +1,42 @@
-import socket
-import sys
-from objects import *
-from thread import *
+import socket,sys,pygame
+from pygame.locals import *
+from thread    import *
+from map       import *
+from event     import *
+from unit      import *
+from interface import *
 
 class Server:
   def __init__(self, port, event):
-    self.player_count = 0
+    self.playerCount = 0
     self.connections = []
     self.event = event
-
     self.socket = initSocket();
+    self.maxPlayers = 2
+    mapSize = (20, 10)  
     
-    start_new_thread(self.listen, (self.socket, ))
+    self.event     = event
+    self.map       = Map(mapSize[0], mapSize[1])
+    self.units     = pygame.sprite.Group()
+    event.register("update", self.units.update)
     
+    start_new_thread(self.serve, (self.socket, ))
     
-    
-    
-    
-  def listen(self,socket):
-    while True:
+
+  def serve(self,socket):
+    print("Waiting for players...")
+    while self.playerCount < self.maxPlayers:
       #wait to accept a connection - blocking call
       conn, addr = socket.accept()
       print 'New player connected with ' + addr[0] + ':' + str(addr[1])
      
       #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
       self.connections.append(conn)
-      self.player_count += 1
+      self.playerCount += 1
       start_new_thread(self.clientThread ,(conn,))
+      
+    print("Begin!")
+    self.broadcast("w"+map.toString())
    
     s.close()
       
@@ -56,7 +66,8 @@ class Server:
 
   #Function for handling connections. This will be used to create threads
   def clientThread(self,conn):
-    player = Player()
+    player = 0# Player(0,0,self.player_count - 1,self.event,self.map)
+#    self.units.add(pl
     player.id = self.player_count - 1
     conn.sendall("c"+str(player.id)+";")
     self.broadcast("a"+str(player.id)+","+str(player.x)+","+str(player.y))
@@ -76,7 +87,7 @@ class Server:
         self.parse(i,player)
           
     #came out of loop
-    conn.close()
+    #conn.close()
 
 def initSocket():
   HOST = ''   # Symbolic name meaning all available interfaces

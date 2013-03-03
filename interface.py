@@ -29,4 +29,7 @@ class Interface:
     elif cmd == 'a':
       params = msg.split(',')
       self.event.notify("playerAdd",int(params[0]),int(params[1]),int(params[2]))
+      
+    elif cmd == 'w':
+      self.event.notify("init",msg)
   

@@ -26,18 +26,19 @@ else:
   socket = connect("127.0.0.1",port,event)
 
 #Set up pygame window
-mapSize = (20, 10)
 pygame.init()
-window = pygame.display.set_mode((64*mapSize[0],64*mapSize[1]),pygame.RESIZABLE)
+window = pygame.display.set_mode((1280,640),pygame.RESIZABLE) #(64*mapSize[0],64*mapSize[1]),pygame.RESIZABLE)
 pygame.display.set_caption("XenoHarvest")
 clock  = pygame.time.Clock()
 
-#Set up game
-map       = Map(mapSize[0], mapSize[1])
-units     = pygame.sprite.Group()
-interface = Interface(socket,event,map,units)
-render    = Renderer(window, event, map, units)
-event.register("update", units.update)
+
+def init(map):
+  #Set up game
+  map       = Map(map)
+  units     = pygame.sprite.Group()
+  interface = Interface(socket,event,map,units)
+  render    = Renderer(window, event, map, units)
+  event.register("update", units.update)
 
 #Start running
 running = True
@@ -46,6 +47,7 @@ def test(s):
   print s
  
 event.register("cmdRecv", test)
+event.register("init", init)
 
 #Main loop
 while running:
