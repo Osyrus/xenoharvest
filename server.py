@@ -74,6 +74,10 @@ class Server:
     player.id = self.player_count - 1
     conn.sendall("c"+str(player.id)+";")
     self.broadcast("a"+str(player.id)+","+str(player.x)+","+str(player.y))
+    
+    for i in self.connections:
+      if i != 0:
+        pass
        
     #infinite loop so that function do not terminate and thread do not end.
     while True:     
