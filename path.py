@@ -6,15 +6,17 @@
 #the Path object (where start and end are tuples representing the start and end locations) to
 #receive a list containing tuples in the form (x, y) that represent locations along the path.
 
-#TODO: Make turning have a higher cost than going straight from start position
+#TODO: Make turning have a higher cost than going straight from start position, also allow for
+#buildings and maybe units acting as impassible squares
 
 class Path:
   #At this point it needs to be passed the map object containing the indices of each tile,
   #but will likely later need to know building positions as well.
-  def __init__(self, map):
+  def __init__(self, map, buildings):
     #Pull the width and height of the map object and associate the values to itself
     self.map = map
     self.height, self.width = self.map.getHeight(), self.map.getWidth()
+    self.buildings = buildings
 
     #Preallocate a 2D boolean matrix
     self.graph = []
@@ -31,11 +33,19 @@ class Path:
   def calcGraph(self):
     for y in range(self.height):
       for x in range(self.width):
-        self.graph[y][x] = self.map.isPassable(x, y)
+        if self.map.isPassable(x, y):
+          for building in self.buildings.sprites():
+            if building.getX() == x and building.getY() == y:
+              self.graph[y][x] = False
+            else:
+              self.graph[y][x] = True
+        else:
+          self.graph[y][x] = False
   
   #The method where all the magic happens (or doesn't...)
   #Start and end are tuples in the form (x, y)
   def calcPath(self, start, end):
+    self.calcGraph()
     #Make sure the desired location isn't just the start location
     if start == end:
       return []

@@ -18,6 +18,12 @@ class Tower(pygame.sprite.Sprite):
   def getPos(self):
     return self.pos
 
+  def getX(self):
+    return self.pos[0]
+
+  def getY(self):
+    return self.pos[1]
+
   def getType(self):
     return self.type
 

@@ -34,9 +34,9 @@ pygame.display.set_caption("XenoHarvest")
 clock  = pygame.time.Clock()
 
 #Set up game
-map       = Map(mapSize[0], mapSize[1])
 units     = pygame.sprite.Group()
 buildings = pygame.sprite.Group() ##Testing
+map       = Map(mapSize[0], mapSize[1], buildings)
 interface = Interface(socket,event,map,units, buildings)
 render    = Renderer(window, event, map, units, buildings)
 event.register("update", units.update)

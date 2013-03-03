@@ -2,7 +2,7 @@ import random
 import path
 
 class Map:
-  def __init__(self, a, b = None):
+  def __init__(self, a, b, buildings):
   
     self.tiles = []
     
@@ -21,7 +21,7 @@ class Map:
 
       self.fill()
 
-    self.pather = path.Path(self)
+    self.pather = path.Path(self, buildings)
 
   def fill(self):
     for y in range(self.height):
