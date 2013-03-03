@@ -4,7 +4,8 @@ import os
 class Unit(pygame.sprite.Sprite):
   def __init__(self,x,y,event,map):
     pygame.sprite.Sprite.__init__(self)
-    self.path     = [(x,y)]
+    self.path     = []
+    self.target   = (x,y)
     self.event    = event
     self.map      = map
     self.image    = None
@@ -22,23 +23,23 @@ class Unit(pygame.sprite.Sprite):
   def update(self):
     reached = True
 
-    if self.rect.left > 64*self.path[0][0]:
+    if self.rect.left > 64*target[0]:
       self.rect.move_ip(-self.speed, 0)
       reached = False
-    elif self.rect.left < 64*self.path[0][0]:
+    elif self.rect.left < 64*target[0]:
       self.rect.move_ip(self.speed, 0)
       reached = False
     
-    if self.rect.top > 64*self.path[0][1]:
+    if self.rect.top > 64*target[1]:
       self.rect.move_ip(0, -self.speed)
       reached = False
-    elif self.rect.top < 64*self.path[0][1]:
+    elif self.rect.top < 64*target[1]:
       self.rect.move_ip(0, self.speed)
       reached = False
       
     if reached:
-      if len(self.path) > 1:
-        self.path.pop(0)
+      if len(self.path) > 0:
+        target = self.path.pop(0)
         
 class Player(Unit):
   def __init__(self,x,y,id,event,map):
