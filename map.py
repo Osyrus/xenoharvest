@@ -56,7 +56,14 @@ class Map:
       array[x] = array[x]/total
       
   def getPath(self, start, end):
-    return self.pather.calcPath(start, end)
+    if self.isPassable(int(end[0]), int(end[1])):
+      candidatePath = self.pather.calcPath(start, end)
+      if end == candidatePath[-1]:
+        return candidatePath
+      else:
+        return (start,)
+    else:
+      return (start,)
 
   # def getPath(self,(x_i,y_i),(x_f,y_f)):
   #   x = x_i
