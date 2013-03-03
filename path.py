@@ -1,11 +1,18 @@
+#A path-finding system based on the Manhattan A* algorithm.
+#The map object that is passed into the constructor needs a method isPassable(x, y) that gives
+#a boolean as to if the location (x, y) is passable (True) or impassable (False). There also
+#needs to be two methods, getWidth() and getHeight(), that return the width and height of the
+#map respectively. Once the object is made, to get the path simply call calcPath(start, end) on
+#the Path object (where start and end are tuples representing the start and end locations) to
+#receive a list containing tuples in the form (x, y) that represent locations along the path.
 
 class Path:
-  #At this point it needs to be passed the tiles object containing the indices of each tile,
+  #At this point it needs to be passed the map object containing the indices of each tile,
   #but will likely later need to know building positions as well.
-  def __init__(self, tiles):
-    #Pull the width and height of the tiles object and associate the values to itself
-    self.tiles = tiles
-    self.height, self.width = self.tiles.getHeight(), self.tiles.getWidth()
+  def __init__(self, map):
+    #Pull the width and height of the map object and associate the values to itself
+    self.map = map
+    self.height, self.width = self.map.getHeight(), self.map.getWidth()
 
     #Preallocate a 2D boolean matrix
     self.graph = []
@@ -18,11 +25,11 @@ class Path:
     #Fill it with the correct passable / impassable values
     self.calcGraph()
 
-  #Turns the tiles into a 2D matrix of boolean values (True is passable, False is not)
+  #Turns the map into a 2D matrix of boolean values (True is passable, False is not)
   def calcGraph(self):
     for y in range(self.height):
       for x in range(self.width):
-        self.graph[y][x] = self.tiles.isPassable(x, y)
+        self.graph[y][x] = self.map.isPassable(x, y)
   
   #The method where all the magic happens (or doesn't...)
   #Start and end are tuples in the form (x, y)
