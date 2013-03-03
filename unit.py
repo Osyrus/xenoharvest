@@ -23,28 +23,32 @@ class Unit(pygame.sprite.Sprite):
     reached = True
 
     if self.rect.left > 64*self.target[0]:
-      if self.bearing == 90:
+      if True: #self.bearing == 90:
         self.rect.move_ip(-self.speed, 0)
       else:
+        print("Current bearing "+str(self.bearing))
         self.turnTo(90)
       reached = False
     elif self.rect.left < 64*self.target[0]:
-      if self.bearing == 270:
+      if True: #self.bearing == 270:
         self.rect.move_ip(self.speed, 0)
       else:
+        print("Current bearing "+str(self.bearing))
         self.turnTo(270)
       reached = False
     
     if self.rect.top > 64*self.target[1]:
-      if self.bearing == 0:
+      if True: #self.bearing == 0:
         self.rect.move_ip(0, -self.speed)
       else:
+        print("Current bearing "+str(self.bearing))
         self.turnTo(0)
       reached = False
     elif self.rect.top < 64*self.target[1]:
-      if self.bearing == 180:
+      if True: #self.bearing == 180:
         self.rect.move_ip(0, self.speed)
       else:
+        print("Current bearing "+str(self.bearing))
         self.turnTo(180)
       reached = False
       
@@ -52,11 +56,12 @@ class Unit(pygame.sprite.Sprite):
       if len(self.path) > 0:
         target = self.path.pop(0)
 
-    def turnTo(self, targetBearing):
-      if self.bearing < targetBearing:
-        self.bearing += self.turnSpeed
-      elif self.bearing > targetBearing:
-        self.bearing -= self.turnSpeed
+  def turnTo(self, targetBearing):
+    print("Turn to "+str(targetBearing)+" from "+str(self.bearing))
+    if self.bearing < targetBearing:
+      self.bearing += self.turnSpeed
+    elif self.bearing > targetBearing:
+      self.bearing -= self.turnSpeed
         
 class Player(Unit):
   def __init__(self,x,y,id,event,map):

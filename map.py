@@ -61,4 +61,4 @@ class Map:
       if end == candidatePath[-1]:
         return candidatePath
 
-    return (start,)
+    return [start]
