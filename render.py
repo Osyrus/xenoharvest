@@ -1,7 +1,6 @@
 import pygame, os
 from pygame.locals import *
 from common import toGrid
-from math import floor
 
 tileSet = pygame.image.load(os.path.join("img","tiles.png"))
 
