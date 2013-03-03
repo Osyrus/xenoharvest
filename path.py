@@ -6,6 +6,8 @@
 #the Path object (where start and end are tuples representing the start and end locations) to
 #receive a list containing tuples in the form (x, y) that represent locations along the path.
 
+#TODO: Make turning have a higher cost than going straight from start position
+
 class Path:
   #At this point it needs to be passed the map object containing the indices of each tile,
   #but will likely later need to know building positions as well.
@@ -115,6 +117,9 @@ class Node:
     self.pos = pos #It's position in the grid
     self.parent = parent #What it's parent Node is
 
+    self.turnCost = 0
+    self.calcTurnCost()
+
     if parent != None:
       self.g = parent.getG() + 1 #Update the cost to get here
     else:
@@ -137,7 +142,7 @@ class Node:
     return self.pos[1]
 
   def getF(self):
-    return self.g + self.h
+    return self.g + self.h + self.turnCost
 
   def getG(self):
     return self.g
@@ -149,6 +154,20 @@ class Node:
   def setParent(self, parent):
     self.parent = parent
     self.g = parent.getG() + 1
+    self.calcTurnCost()
+
+  def calcTurnCost(self):
+    if self.parent != None:
+      prev = self.parent
+      if prev.getParent() != None:
+        dbPrev = prev.getParent()
+
+        dirX, dirY = prev.getX() - dbPrev.getX(), prev.getY() - dbPrev.getY()
+
+        if (self.pos[0] - prev.getX()) == dirX and (self.pos[1] - prev.getY()) == dirY:
+          self.turnCost = 0
+        else:
+          self.turnCost = 1
 
 #Function used to define how the list of possible Node should be sorted
 #In this case, we want to sort it in terms of the total cost F (G + H)
