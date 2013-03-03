@@ -58,7 +58,8 @@ class Map:
   def getPath(self, start, end):
     if self.isPassable(int(end[0]), int(end[1])):
       candidatePath = self.pather.calcPath(start, end)
-      if end == candidatePath[-1]:
-        return candidatePath
+      if len(candidatePath) > 0:
+        if end == candidatePath[-1]:
+          return candidatePath
 
     return [start]

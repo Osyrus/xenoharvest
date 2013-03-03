@@ -34,6 +34,10 @@ class Path:
   #The method where all the magic happens (or doesn't...)
   #Start and end are tuples in the form (x, y)
   def calcPath(self, start, end):
+    #Make sure the desired location isn't just the start location
+    if start == end:
+      return []
+
     #Create empty list of possible squares to check out
     possibles = []
     #The closed list is for already checked squares
