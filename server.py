@@ -1,6 +1,5 @@
 import socket
 import sys
-from objects import *
 from thread import *
 
 class Server:

@@ -1,7 +1,6 @@
 import socket   #for sockets
 import sys  #for exit
 #import pygame
-from objects import *
 from thread  import *
 
 players = []
