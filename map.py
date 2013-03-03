@@ -8,10 +8,11 @@ class Map:
     
     if b == None:
       # Single string to load from has been passed
-      (self.w,self.h) = self.load(a)
+      (self.width,self.height) = self.load(a)
     else:
-      self.width = w
-      self.height = h
+      # Ints for w and h have been passed
+      self.width = a
+      self.height = b
       
       self.numTiles = 10
       self.tileWeighting = [50, 50, 50, 50, 50, 2, 1, 5, 4, 1]
@@ -30,6 +31,9 @@ class Map:
         temp.append(self._chooseTile())
 
       self.tiles.append(temp)
+      
+  def load(self, str):
+    pass
 
   def getTile(self, x, y):
     return self.tiles[y][x]
