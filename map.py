@@ -2,17 +2,23 @@ import random
 import path
 
 class Map:
-  def __init__(self, w, h):
+  def __init__(self, a, b = None):
+  
     self.tiles = []
-    self.width = w
-    self.height = h
+    
+    if b == None:
+      # Single string to load from has been passed
+      (self.w,self.h) = self.load(a)
+    else:
+      self.width = w
+      self.height = h
+      
+      self.numTiles = 10
+      self.tileWeighting = [50, 50, 50, 50, 50, 2, 1, 5, 4, 1]
+      self.passable = [True, True, True, True, True, False, False, False, False, False]
+      self._normWeight(self.tileWeighting)
 
-    self.numTiles = 10
-    self.tileWeighting = [50, 50, 50, 50, 50, 2, 1, 5, 4, 1]
-    self.passable = [True, True, True, True, True, False, False, False, False, False]
-    self._normWeight(self.tileWeighting)
-
-    self.fill()
+      self.fill()
 
     self.pather = path.Path(self)
 

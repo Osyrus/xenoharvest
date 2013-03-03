@@ -1,5 +1,6 @@
 import pygame, os
 from pygame.locals import *
+from common import toGrid
 from math import floor
 
 tileSet = pygame.image.load(os.path.join("img","tiles.png"))
@@ -28,8 +29,6 @@ class Renderer:
       
       
   def registerClick(self, pos, button, down):
-    x = floor(pos[0]/64)
-    y = floor(pos[1]/64)
-    
+    x,y = toGrid(pos)
     if down and button == 3:
       self.event.notify("moveOrder", x,y)
