@@ -1,4 +1,5 @@
 import random
+import path
 
 class Map:
   def __init__(self, w, h):
@@ -12,6 +13,8 @@ class Map:
     self._normWeight(self.tileWeighting)
 
     self.fill()
+
+    self.pather = path.Path(self)
 
   def fill(self):
     for y in range(self.height):
@@ -52,23 +55,26 @@ class Map:
     for x in range(0, self.numTiles):
       array[x] = array[x]/total
       
-  def getPath(self,(x_i,y_i),(x_f,y_f)):
-    x = x_i
-    y = y_i
-    path = [(x,y)]
-    while x != x_f:
-      if x < x_f:
-        x += 1
-      else:
-        x -= 1
-      path.append((x,y))
+  def getPath(self, start, end):
+    return self.pather.calcPath(start, end)
+
+  # def getPath(self,(x_i,y_i),(x_f,y_f)):
+  #   x = x_i
+  #   y = y_i
+  #   path = [(x,y)]
+  #   while x != x_f:
+  #     if x < x_f:
+  #       x += 1
+  #     else:
+  #       x -= 1
+  #     path.append((x,y))
     
-    while y != y_f:
-      if y < y_f:
-        y += 1
-      else:
-        y -= 1
-      path.append((x,y))
+  #   while y != y_f:
+  #     if y < y_f:
+  #       y += 1
+  #     else:
+  #       y -= 1
+  #     path.append((x,y))
       
-    return path
+  #   return path
       

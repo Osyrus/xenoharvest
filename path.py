@@ -1,11 +1,12 @@
 
 class Path:
-  #At this point it needs to be passed the map object containing the indices of each tile,
+  #At this point it needs to be passed the tiles object containing the indices of each tile,
   #but will likely later need to know building positions as well.
-  def __init__(self, map):
-    #Pull the width and height of the map object and associate the values to itself
-    self.height = map.getHeight()
-    self.width = map.getWidth()
+  def __init__(self, tiles):
+    #Pull the width and height of the tiles object and associate the values to itself
+    self.tiles = tiles
+    self.height, self.width = self.tiles.getHeight(), self.tiles.getWidth()
+    print("Width = "+str(self.width)+", Height = "+str(self.height))
 
     #Preallocate a 2D boolean matrix
     self.graph = []
@@ -18,11 +19,11 @@ class Path:
     #Fill it with the correct passable / impassable values
     self.calcGraph()
 
-  #Turns the map into a 2D matrix of boolean values (True is passable, False is not)
+  #Turns the tiles into a 2D matrix of boolean values (True is passable, False is not)
   def calcGraph(self):
     for y in range(self.height):
       for x in range(self.width):
-        self.graph = map.isPassable(x, y)
+        self.graph[y][x] = self.tiles.isPassable(x, y)
   
   #The method where all the magic happens (or doesn't...)
   #Start and end are tuples in the form (x, y)
@@ -33,13 +34,14 @@ class Path:
     closed = []
 
     #Add the starting point to the possibles list
-    possibles.append(Node(start, 0, 0))
+    possibles.append(Node(start, None, end))
 
     #Find the possible places to go
     #Define a list in which to iterate over to check the adjacent squares
     sList = ((-1, 0), (1, 0), (0, -1), (0, 1))
     #The main loop, iterate until done
-    while parent = possibles.pop():
+    while len(possibles) > 0:
+      parent = possibles.pop()
       #The parent is the square by which the checks are based around
       #The parent is chosen from the end as that should be the Node with the lowest F score
       if parent.getPos() == end:
@@ -51,22 +53,25 @@ class Path:
       #Check all of the adjacent points using the previously defined list
       for i in range(4):
         #Create a candidate to possibly add to the list of possibles
-        candidate = Node(parentX + sList[i][0], parentY + sList[i][1], parent, end)
+        candidate = Node((parentX + sList[i][0], parentY + sList[i][1]), parent, end)
 
         #Check to see if the graph shows that the location is passable
-        if self.graph[candidate.getY()][candidate.getX()] and candidate not in closed:
-          #Thanks to python, pretty much what it says
-          if candidate not in possibles:
-            #If it's not there, add it
-            possibles.append(candidate)
-          else:
-            #If it is in there, is it more efficient to come from this new direction or not?
-            for i in range(len(possibles)):
-              if possibles[i] == candidate:
-                if possibles[i].getG() > candidate.getG():
-                  #If it is a lower cost to get there from the current parent Node, change the
-                  #parent to be the current one instead. If not, do nothing
-                  possibles[i].setParent(candidate.parent)
+        print("x = "+str(candidate.getX())+", y = "+str(candidate.getY()))
+        if candidate.getY() < self.height and candidate.getY() >= 0 and candidate.getX() < self.width and candidate.getX() >= 0:
+          if self.graph[candidate.getY()][candidate.getX()] and candidate not in closed:
+            print "Passed as candidate"
+            #Thanks to python, pretty much what it says
+            if candidate not in possibles:
+              #If it's not there, add it
+              possibles.append(candidate)
+            else:
+              #If it is in there, is it more efficient to come from this new direction or not?
+              for i in range(len(possibles)):
+                if possibles[i] == candidate:
+                  if possibles[i].getG() > candidate.getG():
+                    #If it is a lower cost to get there from the current parent Node, change the
+                    #parent to be the current one instead. If not, do nothing
+                    possibles[i].setParent(candidate.parent)
 
       #Put the now dealt with parent test Node into the closed list
       closed.append(parent)
@@ -101,7 +106,12 @@ class Node:
   def __init__(self, pos, parent, end):
     self.pos = pos #It's position in the grid
     self.parent = parent #What it's parent Node is
-    self.g = parent.getG() + 1 #Update the cost to get here
+
+    if parent != None:
+      self.g = parent.getG() + 1 #Update the cost to get here
+    else:
+      self.g = 0
+
     self.h = abs(pos[0] - end[0]) + abs(pos[1] - end[1]) #Update the cost to get to the end
 
   #Overriding the equivalence operator to allow for Nodes to be equated based on their locations
