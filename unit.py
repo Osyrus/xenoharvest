@@ -10,7 +10,8 @@ class Unit(pygame.sprite.Sprite):
     self.image    = None
     self.rect     = pygame.Rect(0, 0, 64, 64)
     self.speed    = 4
-    self.facing   = 0
+    self.bearing  = 0
+    self.turnSpeed= 4
 
     self.rect.topleft = (x, y)
     event.register("update",self.update)
@@ -43,7 +44,7 @@ class Player(Unit):
   def __init__(self,x,y,id,event,map):
     Unit.__init__(self,x,y,event,map)
 
-    self.id       = id
+    self.id = id
 
     if id == 0:
       self.image = pygame.image.load(os.path.join("img","player_b.png"))
