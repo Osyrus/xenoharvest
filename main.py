@@ -37,6 +37,7 @@ map       = Map(mapSize[0], mapSize[1])
 units     = pygame.sprite.Group()
 interface = Interface(socket,event,map,units)
 render    = Renderer(window, event, map, units)
+event.register("update", units.update)
 
 #Start running
 running = True
