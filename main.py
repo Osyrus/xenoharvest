@@ -63,7 +63,9 @@ while running:
     elif e.type == MOUSEBUTTONUP:
       inputs.registerClick(e.pos, e.button, False)
     elif e.type == KEYDOWN:
-      imputs.registerKey(e.key, True)
+      inputs.registerKey(e.key, True)
+    elif e.type == KEYUP:
+      inputs.registerKey(e.key, False)
   
   pygame.display.update()
   event.update()
