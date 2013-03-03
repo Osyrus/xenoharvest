@@ -34,15 +34,19 @@ class Path:
     while parent = possibles.pop():
       #The parent is the square by which the checks are based around
       #The parent is chosen from the end as that should be the Node with the lowest F score
+      if parent.getPos() == end:
+        closed.append(parent)
+        break
+
       parentX, parentY = parent.getPos()
 
       #Check all of the adjacent points using the previously defined list
       for i in range(4):
-        #Check to see if the graph shows that the location is passable
-        if self.graph[parentY + sList[i][0]][parentX + sList[i][1]]:
-          #Create a candidate to possibly add to the list of possibles
-          candidate = Node(parentX + sList[i][0], parentY + sList[i][1], parent, end)
+        #Create a candidate to possibly add to the list of possibles
+        candidate = Node(parentX + sList[i][0], parentY + sList[i][1], parent, end)
 
+        #Check to see if the graph shows that the location is passable
+        if self.graph[candidate.getY()][candidate.getX()] and candidate not in closed:
           #Thanks to python, pretty much what it says
           if candidate not in possibles:
             #If it's not there, add it
@@ -56,8 +60,32 @@ class Path:
                   #parent to be the current one instead. If not, do nothing
                   possibles[i].setParent(candidate.parent)
 
+      #Put the now dealt with parent test Node into the closed list
       closed.append(parent)
+      #Sort the possibles list from highest to lowest, so the next popped should have the lowest F
       possibles.sort(compareNodes)
+
+    #Now to trace the completed path back to the start
+    done = False
+    path = []
+    #Fetch the last added Node to the closed list (the end Node)
+    traceNode = closed.pop()
+    #Loop until the start square is found
+    while not done:
+      #Check is the start square has been found,
+      #(don't append it as we don't need to move to where we already are)
+      if traceNode.getPos() == start:
+        done = True
+      else:
+        #Append the position of the Node to the path list
+        path.append(traceNode.getPos())
+        #Change our trace Node to the next Node in line
+        traceNode = traceNode.getParent()
+
+    #The path currently starts at the end and ends at the start, needs to be reversed
+    path.reverse()
+    #Finally we can return the completed path
+    return path
 
 class Node:
   def __init__(self, pos, parent, end):
@@ -72,6 +100,12 @@ class Node:
   def getPos(self):
     return self.pos
 
+  def getX(self):
+    return self.pos[0]
+
+  def getY(self):
+    return self.pos[1]
+
   def getF(self):
     return self.g + self.h
 
@@ -81,6 +115,9 @@ class Node:
   def setParent(self, parent):
     self.parent = parent
     self.g = parent.getG() + 1
+
+  def getParent(self):
+    return self.parent
 
 def compareNodes(x, y):
   if x.getF() > y.getF():
