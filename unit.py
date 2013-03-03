@@ -12,7 +12,7 @@ class Unit(pygame.sprite.Sprite):
     self.rect     = pygame.Rect(0, 0, 64, 64)
     self.speed    = 4
     self.bearing  = 0
-    self.turnSpeed= 5
+    self.turnSpeed= 10
 
     self.rect.topleft = (x, y)
 
@@ -52,11 +52,21 @@ class Unit(pygame.sprite.Sprite):
         self.target = self.path.pop(0)
 
   def turnTo(self, targetBearing):
-    print("Turn to "+str(targetBearing)+" from "+str(self.bearing))
     if self.bearing < targetBearing:
-      self.bearing += self.turnSpeed
+      if abs(targetBearing - self.bearing) > 180:
+        self.bearing -= self.turnSpeed
+      else:
+        self.bearing += self.turnSpeed
     elif self.bearing > targetBearing:
-      self.bearing -= self.turnSpeed
+      if abs(targetBearing - self.bearing) > 180:
+        self.bearing += self.turnSpeed
+      else:
+        self.bearing -= self.turnSpeed
+
+    if self.bearing > 360:
+      self.bearing -= 360
+    elif self.bearing < 0:
+      self.bearing += 360
         
 class Player(Unit):
   def __init__(self,x,y,id,event,map):
