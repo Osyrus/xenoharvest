@@ -2,6 +2,12 @@ import socket
 import sys
 from thread import *
 
+class Player:
+  def __init__(self):
+    self.id = -1
+    self.x  = 0
+    self.y  = 0
+
 class Server:
   def __init__(self, port, event):
     self.player_count = 0
@@ -11,9 +17,6 @@ class Server:
     self.socket = initSocket();
     
     start_new_thread(self.listen, (self.socket, ))
-    
-    
-    
     
     
   def listen(self,socket):
