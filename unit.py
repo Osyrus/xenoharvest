@@ -23,32 +23,28 @@ class Unit(pygame.sprite.Sprite):
     reached = True
     print(self.target)
     if self.rect.left > 64*self.path[0][0]:
-      if True: #self.bearing == 90:
+      if self.bearing == 90:
         self.rect.move_ip(-self.speed, 0)
       else:
-        print("Current bearing "+str(self.bearing))
         self.turnTo(90)
       reached = False
     elif self.rect.left < 64*self.path[0][0]:
-      if True: #self.bearing == 270:
+      if self.bearing == 270:
         self.rect.move_ip(self.speed, 0)
       else:
-        print("Current bearing "+str(self.bearing))
         self.turnTo(270)
       reached = False
     
     if self.rect.top > 64*self.path[0][1]:
-      if True: #self.bearing == 0:
+      if self.bearing == 0:
         self.rect.move_ip(0, -self.speed)
       else:
-        print("Current bearing "+str(self.bearing))
         self.turnTo(0)
       reached = False
     elif self.rect.top < 64*self.path[0][1]:
-      if True: #self.bearing == 180:
+      if self.bearing == 180:
         self.rect.move_ip(0, self.speed)
       else:
-        print("Current bearing "+str(self.bearing))
         self.turnTo(180)
       reached = False
       
