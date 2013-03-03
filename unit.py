@@ -11,10 +11,11 @@ class Unit(pygame.sprite.Sprite):
     self.map      = map
     self.image    = image
     self.baseImage= self.image
-    self.rect     = pygame.Rect(0, 0, 64, 64)
+    self.rect     = self.baseImage.get_rect()
     self.speed    = 4
     self.bearing  = 0
     self.turnSpeed= 10
+    self.x, self.y= toPixels((x, y))
 
     self.rect.center = (x+32, y+32)
 
@@ -23,29 +24,31 @@ class Unit(pygame.sprite.Sprite):
     
   def update(self):
     reached = True
+
     targetPixel = toPixels(self.target)
+
     if self.rect.centerx > targetPixel[0]:
       if self.bearing == 90:
-        self.rect.move_ip(-self.speed, 0)
+        self.x -= self.speed
       else:
         self.turnTo(90)
       reached = False
     elif self.rect.centerx < targetPixel[0]:
       if self.bearing == 270:
-        self.rect.move_ip(self.speed, 0)
+        self.x += self.speed
       else:
         self.turnTo(270)
       reached = False
     
     if self.rect.centery > targetPixel[1]:
       if self.bearing == 0:
-        self.rect.move_ip(0, -self.speed)
+        self.y -= self.speed
       else:
         self.turnTo(0)
       reached = False
     elif self.rect.centery < targetPixel[1]:
       if self.bearing == 180:
-        self.rect.move_ip(0, self.speed)
+        self.y += self.speed
       else:
         self.turnTo(180)
       reached = False
@@ -55,6 +58,8 @@ class Unit(pygame.sprite.Sprite):
         self.target = self.path.pop(0)
     
     self.image = pygame.transform.rotate(self.baseImage, self.bearing)
+    self.rect = self.image.get_rect()
+    self.rect.center = (self.x, self.y)
 
   def turnTo(self, targetBearing):
     if self.bearing < targetBearing:
