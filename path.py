@@ -61,7 +61,7 @@ class Path:
       parentX, parentY = parent.getPos()
 
       #Check all of the adjacent points using the previously defined list
-      for i in range(4):
+      for i in range(len(sList)):
         #Create a candidate to possibly add to the list of possibles
         candidate = Node((parentX + sList[i][0], parentY + sList[i][1]), parent, end)
 
