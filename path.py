@@ -146,8 +146,8 @@ class Node:
 #In this case, we want to sort it in terms of the total cost F (G + H)
 def compareNodes(x, y):
   if x.getF() > y.getF():
-    return 1
+    return -1
   elif x.getF() == y.getF():
     return 0
   elif x.getF() < y.getF():
-    return -1
+    return 1
