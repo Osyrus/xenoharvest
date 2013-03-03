@@ -52,16 +52,16 @@ event.register("cmdRecv", test)
 while running:
   for e in pygame.event.get():
     if e.type == QUIT:
-			pygame.quit()
-			disconnect(socket)
-			sys.exit()
+      disconnect(socket)
+      pygame.quit()
+      sys.exit()
     elif e.type == VIDEORESIZE:
-			pygame.display.set_mode((e.size),pygame.RESIZABLE)
+      pygame.display.set_mode((e.size),pygame.RESIZABLE)
     elif e.type == MOUSEBUTTONDOWN:
       render.registerClick(e.pos, e.button, True)
     elif e.type == MOUSEBUTTONUP:
       render.registerClick(e.pos, e.button, False)
-	
+  
   pygame.display.update()
   event.update()
   event.notify("update")

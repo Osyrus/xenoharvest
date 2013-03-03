@@ -30,6 +30,6 @@ def connect(ip, port, event):
   start_new_thread(serverlisten ,(s,event,))
   return s
   
-def disconnect(s):
-  s.sendall("d")
+def disconnect(socket):
+  socket.sendall("d")
   socket.close()

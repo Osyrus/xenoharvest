@@ -60,28 +60,5 @@ class Map:
       candidatePath = self.pather.calcPath(start, end)
       if end == candidatePath[-1]:
         return candidatePath
-      else:
-        return (start,)
-    else:
-      return (start,)
 
-  # def getPath(self,(x_i,y_i),(x_f,y_f)):
-  #   x = x_i
-  #   y = y_i
-  #   path = [(x,y)]
-  #   while x != x_f:
-  #     if x < x_f:
-  #       x += 1
-  #     else:
-  #       x -= 1
-  #     path.append((x,y))
-    
-  #   while y != y_f:
-  #     if y < y_f:
-  #       y += 1
-  #     else:
-  #       y -= 1
-  #     path.append((x,y))
-      
-  #   return path
-      
+    return (start,)
