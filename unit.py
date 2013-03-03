@@ -1,5 +1,6 @@
 import pygame
 import os
+from common import toPixels
 
 class Unit(pygame.sprite.Sprite):
   def __init__(self,x,y,event,map,image):
@@ -22,26 +23,27 @@ class Unit(pygame.sprite.Sprite):
     
   def update(self):
     reached = True
-    if self.rect.left > 64*self.target[0]:
+    targetPixel = toPixels(self.target)
+    if self.rect.left > targetPixel[0]:
       if self.bearing == 90:
         self.rect.move_ip(-self.speed, 0)
       else:
         self.turnTo(90)
       reached = False
-    elif self.rect.left < 64*self.target[0]:
+    elif self.rect.left < targetPixel[0]:
       if self.bearing == 270:
         self.rect.move_ip(self.speed, 0)
       else:
         self.turnTo(270)
       reached = False
     
-    if self.rect.top > 64*self.target[1]:
+    if self.rect.top > targetPixel[1]:
       if self.bearing == 0:
         self.rect.move_ip(0, -self.speed)
       else:
         self.turnTo(0)
       reached = False
-    elif self.rect.top < 64*self.target[1]:
+    elif self.rect.top < targetPixel[1]:
       if self.bearing == 180:
         self.rect.move_ip(0, self.speed)
       else:
