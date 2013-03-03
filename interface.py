@@ -14,7 +14,7 @@ class Interface:
     self.socket.send("m"+str(x)+","+str(y))
     
   def addPlayer(self,id,x,y):
-    self.units.append(Player(x,y,id,self.event,self.map))
+    self.units.add(Player(x,y,id,self.event,self.map))
     
   def parse(self,data):
     cmd = data[0]

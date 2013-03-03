@@ -37,8 +37,6 @@ map       = Map(mapSize[0], mapSize[1])
 units     = pygame.sprite.Group()
 interface = Interface(socket,event,map,units)
 render    = Renderer(window, event, map, units)
-player = Player(0,0,0,event,map, units)
-event.register("moveOrder", player.move)
 
 #Start running
 running = True
