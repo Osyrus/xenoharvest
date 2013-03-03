@@ -1,6 +1,6 @@
 from client import connect,disconnect
 from server    import *
-import pygame,sys
+import pygame,sys,inputs
 from pygame.locals import *
 from map       import *
 from event     import *
@@ -10,8 +10,9 @@ from interface import *
 
 socket = False
 
-#Initialise events
+#Initialise events and inputs
 event = Event();
+inputs = inputs.Inputs(event)
 
 #Connect to server
 ip     = raw_input("Server ip (leave blank to host): ")
@@ -35,8 +36,9 @@ clock  = pygame.time.Clock()
 #Set up game
 map       = Map(mapSize[0], mapSize[1])
 units     = pygame.sprite.Group()
-interface = Interface(socket,event,map,units)
-render    = Renderer(window, event, map, units)
+buildings = pygame.sprite.Group() ##Testing
+interface = Interface(socket,event,map,units, buildings)
+render    = Renderer(window, event, map, units, buildings)
 event.register("update", units.update)
 
 #Start running
@@ -57,9 +59,11 @@ while running:
     elif e.type == VIDEORESIZE:
       pygame.display.set_mode((e.size),pygame.RESIZABLE)
     elif e.type == MOUSEBUTTONDOWN:
-      render.registerClick(e.pos, e.button, True)
+      inputs.registerClick(e.pos, e.button, True)
     elif e.type == MOUSEBUTTONUP:
-      render.registerClick(e.pos, e.button, False)
+      inputs.registerClick(e.pos, e.button, False)
+    elif e.type == KEYDOWN:
+      imputs.registerKey(e.key, True)
   
   pygame.display.update()
   event.update()

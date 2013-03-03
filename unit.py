@@ -15,7 +15,7 @@ class Unit(pygame.sprite.Sprite):
     self.speed    = 4
     self.bearing  = 0
     self.turnSpeed= 10
-    self.x, self.y= toPixels((x, y))
+    self.x,self.y = toPixels((x, y))
 
     self.rect.center = (x+32, y+32)
 

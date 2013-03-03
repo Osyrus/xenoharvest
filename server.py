@@ -44,9 +44,11 @@ class Server:
         print "[Player "+str(player.id+1)+" > "+params[0]+","+params[1]+"]"
         self.event.notify("serverMove", player.id, params[0],params[1])
         self.broadcast("m"+str(player.id)+","+params[0]+","+params[1])
-    elif cmd == 'd':
-      #IMPLEMENT CORRECT DC HERE
-      print "DC"
+    elif cmd == 'b':
+      params = msg.split(',')
+      if params >= 2:
+        self.event.notify("serverBuild",params[0],params[1],params[2])
+        self.broadcast("b"+params[0]+","+params[1]+","+params[2])
 
   def broadcast(self,data):
     data = data+';'

@@ -5,13 +5,14 @@ from common import toGrid
 tileSet = pygame.image.load(os.path.join("img","tiles.png"))
 
 class Renderer:
-  def __init__(self,window,event,map,units):
+  def __init__(self,window,event,map,units, buildings):
     self.window = window
     self.event  = event
     self.map    = map
     self.map_w  = map.getWidth()
     self.map_h  = map.getHeight()
     self.units  = units
+    self.buildings = buildings
     event.register("update", self.update)
     
   def update(self):
@@ -25,9 +26,4 @@ class Renderer:
           self.window.blit(tileSet, (x*64, y*64), rect)
         
     self.units.draw(self.window)
-      
-      
-  def registerClick(self, pos, button, down):
-    x,y = toGrid(pos)
-    if down and button == 3:
-      self.event.notify("moveOrder", x,y)
+    self.buildings.draw(self.window)
