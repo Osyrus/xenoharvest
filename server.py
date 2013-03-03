@@ -9,27 +9,9 @@ class Server:
     self.connections = []
     self.event = event
 
-    HOST = ''   # Symbolic name meaning all available interfaces
-    PORT = 8888 # Arbitrary non-privileged port
-   
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    print 'Socket created'
-
-    #Bind socket to local host and port
-    try:
-      s.bind((HOST, PORT))
-    except socket.error , msg:
-      print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
-      sys.exit()
-     
-    print 'Socket bind complete'
-     
-    #Start listening on socket
-    s.listen(8)
-    print 'Socket now listening'
+    self.socket = initSocket();
     
-    start_new_thread(self.listen, (s, ))
+    start_new_thread(self.listen, (self.socket, ))
     
   def listen(self,socket):
     while True:
@@ -40,7 +22,7 @@ class Server:
       #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
       self.connections.append(conn)
       self.player_count += 1
-      start_new_thread(self.clientthread ,(conn,))
+      start_new_thread(self.clientThread ,(conn,))
    
     s.close()
       
@@ -69,7 +51,7 @@ class Server:
         i.sendall(data)
 
   #Function for handling connections. This will be used to create threads
-  def clientthread(self,conn):
+  def clientThread(self,conn):
     player = Player()
     player.id = self.player_count - 1
     conn.sendall("c"+str(player.id)+";")
@@ -91,3 +73,23 @@ class Server:
           
     #came out of loop
     conn.close()
+
+def initSocket():
+  HOST = ''   # Symbolic name meaning all available interfaces
+  PORT = 8888 # Arbitrary non-privileged port
+ 
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+  #Bind socket to local host and port
+  try:
+    s.bind((HOST, PORT))
+  except socket.error , msg:
+    print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+    sys.exit()
+   
+  #Start listening on socket
+  s.listen(8)
+  print 'Socket initialised'
+  return s
+

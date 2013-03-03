@@ -17,7 +17,7 @@ class Unit(pygame.sprite.Sprite):
     self.rect.topleft = (x, y)
 
   def move(self,x,y):
-    self.path = self.map.getPath(self.path[0], (x,y))
+    self.path = self.map.getPath(self.target, (x,y))
     
   def update(self):
     reached = True
