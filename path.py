@@ -1,23 +1,31 @@
 
 class Path:
+  #At this point it needs to be passed the map object containing the indices of each tile,
+  #but will likely later need to know building positions as well.
   def __init__(self, map):
-    self.graph = []
+    #Pull the width and height of the map object and associate the values to itself
     self.height = map.getHeight()
     self.width = map.getWidth()
 
+    #Preallocate a 2D boolean matrix
+    self.graph = []
     for y in range(self.height):
       temp = []
       for x in range(self.width):
         temp.append(True);
       self.graph.append(temp)
 
+    #Fill it with the correct passable / impassable values
     self.calcGraph()
 
+  #Turns the map into a 2D matrix of boolean values (True is passable, False is not)
   def calcGraph(self):
     for y in range(self.height):
       for x in range(self.width):
         self.graph = map.isPassable(x, y)
   
+  #The method where all the magic happens (or doesn't...)
+  #Start and end are tuples in the form (x, y)
   def calcPath(self, start, end):
     #Create empty list of possible squares to check out
     possibles = []
@@ -87,16 +95,20 @@ class Path:
     #Finally we can return the completed path
     return path
 
+#The Node object, allows for each coordinate to contain more information that just it's position
 class Node:
+  #Initialise the object with some stuff
   def __init__(self, pos, parent, end):
-    self.pos = pos
-    self.parent = parent
-    self.g = parent.getG() + 1
-    self.h = abs(pos[0] - end[0]) + abs(pos[1] - end[1])
+    self.pos = pos #It's position in the grid
+    self.parent = parent #What it's parent Node is
+    self.g = parent.getG() + 1 #Update the cost to get here
+    self.h = abs(pos[0] - end[0]) + abs(pos[1] - end[1]) #Update the cost to get to the end
 
+  #Overriding the equivalence operator to allow for Nodes to be equated based on their locations
   def __eq__(self, other):
     return self.pos == other.pos
 
+  #Getters
   def getPos(self):
     return self.pos
 
@@ -112,13 +124,16 @@ class Node:
   def getG(self):
     return self.g
 
+  def getParent(self):
+    return self.parent
+
+  #Setter for the parent, also updates the new cost to get to the Node from the parent
   def setParent(self, parent):
     self.parent = parent
     self.g = parent.getG() + 1
 
-  def getParent(self):
-    return self.parent
-
+#Function used to define how the list of possible Node should be sorted
+#In this case, we want to sort it in terms of the total cost F (G + H)
 def compareNodes(x, y):
   if x.getF() > y.getF():
     return 1
