@@ -56,7 +56,8 @@ class Server:
       params = msg.split(',')
       if params >= 2:
         print "[Player "+str(player.id+1)+" > "+params[0]+","+params[1]+"]"
-        self.event.notify("serverMove", player.id, params[0]+","+params[1])
+        self.event.notify("serverMove", player.id, params[0],params[1])
+        self.broadcast("m"+str(player.id)+","+params[0]+","+params[1])
     elif cmd == 'd':
       #IMPLEMENT CORRECT DC HERE
       print "DC"

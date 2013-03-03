@@ -1,5 +1,4 @@
 #from map import *
-movespeed = 4
 class Unit:
   def __init__(self,x,y,event,map):
     self.x        = 64*x
@@ -7,6 +6,7 @@ class Unit:
     self.path     = [(x,y)]
     self.event    = event
     self.map      = map
+    self.speed    = 4
     event.register("update",self.update)
 
   def move(self,x,y):
@@ -16,17 +16,17 @@ class Unit:
     reached = True
     
     if self.x > 64*self.path[0][0]:
-      self.x -= 4
+      self.x -= self.speed
       reached = False
     elif self.x < 64*self.path[0][0]:
-      self.x += 4
+      self.x += self.speed
       reached = False
     
     if self.y > 64*self.path[0][1]:
-      self.y -= 4
+      self.y -= self.speed
       reached = False
     elif self.y < 64*self.path[0][1]:
-      self.y += 4
+      self.y += self.speed
       reached = False
       
     if reached:
@@ -37,3 +37,8 @@ class Player(Unit):
   def __init__(self,x,y,id,event,map):
     Unit.__init__(self,x,y,event,map)
     self.id       = id
+    event.register("playerMove",self.moveID)
+    
+  def moveID(self,id,x,y):
+    if id == self.id:
+      self.move(x,y)

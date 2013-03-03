@@ -33,12 +33,10 @@ pygame.display.set_caption("XenoHarvest")
 clock  = pygame.time.Clock()
 
 #Set up game
-interface = Interface(socket,event)
 map       = Map(mapSize[0], mapSize[1])
 units     = []
-render    = Renderer(window, event, map, units)
-units.append(Player(0,0,0,event,map))
-event.register("moveOrder", units[0].move)
+interface = Interface(socket,event,map,units)
+render    = Renderer(window,event,map,units)
 
 #Start running
 running = True
