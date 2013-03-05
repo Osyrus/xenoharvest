@@ -16,8 +16,10 @@ class Renderer:
     event.register("update", self.update)
     
   def update(self):
+    #Draw background
     self.window.fill(pygame.Color(0,0,0))
     
+    #Draw map tiles
     for x in range(self.map_w):
       for y in range(self.map_h):
         tile = self.map.getTile(x,y)
@@ -25,5 +27,8 @@ class Renderer:
           rect = pygame.Rect(64*tile, 0, 64, 64)
           self.window.blit(tileSet, (x*64, y*64), rect)
         
-    self.units.draw(self.window)
+    #Draw the buildings
     self.buildings.draw(self.window)
+
+    #Draw the units (including players)
+    self.units.draw(self.window)
