@@ -34,11 +34,9 @@ class Path:
     for y in range(self.height):
       for x in range(self.width):
         if self.map.isPassable(x, y):
+          self.graph[y][x] = True
           for building in self.buildings.sprites():
-            if building.getX() == x and building.getY() == y:
-              self.graph[y][x] = False
-            else:
-              self.graph[y][x] = True
+            self.graph[building.getY()][building.getX()] = False
         else:
           self.graph[y][x] = False
   
