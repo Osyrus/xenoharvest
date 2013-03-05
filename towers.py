@@ -12,6 +12,7 @@ class Tower(pygame.sprite.Sprite):
     self.radius = 0
     self.image = pygame.Surface((64, 64))
     self.rect = self.image.get_rect()
+    self.solid = False
 
     self.updateImage()
 
@@ -29,6 +30,9 @@ class Tower(pygame.sprite.Sprite):
 
   def update(self):
     pass
+
+  def isPassable(self):
+    return self.solid
 
   def updateImage(self):
     if self.type > 0 and self.level > 0:
