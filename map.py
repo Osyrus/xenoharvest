@@ -21,7 +21,7 @@ class Map:
 
       self.fill()
 
-    self.pather = path.Path(self, buildings)
+    self.pather = path.Path(self, buildings) #This may need more information later
 
   def fill(self):
     for y in range(self.height):
