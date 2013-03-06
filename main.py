@@ -64,6 +64,7 @@ if( ip != "" ):
 else:
   mapManager = map.Map(*common.mapSize)
   interface  = server.Server(port,event, mapManager)
+  units.add(Player(0,0,0,eventManager,mapManager))
   init()
 
 eventManager.register("transmit", interface.transmit)
