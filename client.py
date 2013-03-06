@@ -1,34 +1,30 @@
-import socket   #for sockets
-import sys  #for exit
-#import pygame
+import socket,sys
+import common
 from thread  import *
 
-players = []
-self_id = -1
+class Client:
+  def __init__(self,ip,port,event):
+    self.event  = event
+    self.socket = self._initSocket(ip,port)
 
-def serverlisten(socket,event):  
-  while True:
-    data = socket.recv(1024)
-    if not data:
-      break
-    cmds = data.split(';')
-    for i in cmds:
-      if i:
-        event.notify("cmdRecv", i)
+  def update():
+    data = socket.recv(1024).split(";")
+    for i in data:
+      if i != "":
+        cmd,params = common.parse(i)
+        event.notify("cmdRecv", cmd, *params)
         
-def connect(ip, port, event):
-  try:
-    #create an AF_INET, STREAM socket (TCP)
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  except socket.error, msg:
-    print 'Failed to create socket. Error code: ' + str(msg[0]) + ' , Error message : ' + msg[1]
-    sys.exit()
+  def _initSocket(self,ip,port):
+    try:
+      #create an AF_INET, STREAM socket (TCP)
+      s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    except socket.error, msg:
+      print 'Failed to create socket. Error code: ' + str(msg[0]) + ' , Error message : ' + msg[1]
+      sys.exit()
 
-  print 'Socket Created'
-  s.connect((ip,port))
-  start_new_thread(serverlisten ,(s,event,))
-  return s
-  
-def disconnect(socket):
-  socket.sendall("d")
-  socket.close()
+    s.connect((ip,port))
+    start_new_thread(serverlisten ,(s,event,))
+    return s
+
+  def transmit(self,cmd,*params):
+    socket.sendall(common.package(cmd,params))

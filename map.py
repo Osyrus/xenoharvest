@@ -2,9 +2,10 @@ import random
 import path
 
 class Map:
-  def __init__(self, a, b, buildings):
+  def __init__(self, a, b=None):
   
-    self.tiles = []
+    self.tiles  = []
+    self.tileMap = ['1','2','3','4','5','6','7','8','9']
     
     if b == None:
       # Single string to load from has been passed
@@ -21,8 +22,6 @@ class Map:
 
       self.fill()
 
-    self.pather = path.Path(self, buildings)
-
   def fill(self):
     for y in range(self.height):
       temp = []
@@ -32,8 +31,24 @@ class Map:
 
       self.tiles.append(temp)
       
-  def load(self, str):
-    pass
+  def load(self, *rows):
+    for row in rows:
+      if row != "":
+        temp = []
+        for char in row:
+          temp.append(self.tileMap.index(char))
+        map.append(temp)
+
+    return (len(map[0]),len(map))
+
+  def toString(self):
+    ret = ()
+    for y in range(self.height):
+      temp = ""
+      for x in range(self.width):
+        temp += self.tileMap[self.getTile(x,y)]
+      ret += (temp,)
+    return ret
 
   def getTile(self, x, y):
     return self.tiles[y][x]
@@ -64,12 +79,3 @@ class Map:
 
     for x in range(0, self.numTiles):
       array[x] = array[x]/total
-      
-  def getPath(self, start, end):
-    if self.isPassable(int(end[0]), int(end[1])):
-      candidatePath = self.pather.calcPath(start, end)
-      if len(candidatePath) > 0:
-        if end == candidatePath[-1]:
-          return candidatePath
-
-    return [start]

@@ -12,11 +12,12 @@
 class Path:
   #At this point it needs to be passed the map object containing the indices of each tile,
   #but will likely later need to know building positions as well.
-  def __init__(self, map, buildings):
+  def __init__(self, map, units, buildings):
     #Pull the width and height of the map object and associate the values to itself
-    self.map = map
-    self.height, self.width = self.map.getHeight(), self.map.getWidth()
-    self.buildings = buildings
+    self.map                = map
+    self.height, self.width = map.getHeight(), map.getWidth()
+    self.buildings          = buildings
+    self.units              = units
 
     #Preallocate a 2D boolean matrix
     self.graph = []
@@ -28,6 +29,17 @@ class Path:
 
     #Fill it with the correct passable / impassable values
     self.calcGraph()
+
+
+      
+  def getPath(self, start, end):
+    if self.map.isPassable(int(end[0]), int(end[1])):
+      candidatePath = self.calcPath(start, end)
+      if len(candidatePath) > 0:
+        if end == candidatePath[-1]:
+          return candidatePath
+
+    return [start]
 
   #Turns the map into a 2D matrix of boolean values (True is passable, False is not)
   def calcGraph(self):

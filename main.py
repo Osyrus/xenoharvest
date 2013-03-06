@@ -1,73 +1,47 @@
-from client import connect,disconnect
-from server    import *
-import pygame,sys,inputs
+import pygame,sys
+import server,client,map,event,render,unit,inputs,path,core,common
 from pygame.locals import *
-from map       import *
-from event     import *
-from render    import *
-from unit      import *
-from interface import *
 
-socket = False
+#Initialise game objects
+eventManager  = event.Event()
+inputManager  = inputs.Inputs(event)
+unitGroup     = pygame.sprite.Group()
+buildingGroup = pygame.sprite.Group()
+mapManager    = None                   # Map to be loaded from server
+window        = None                   # Initialised once players connected
+pather        = None
 
-#Initialise events and inputs
-event = Event();
-inputs = inputs.Inputs(event)
+
+#Initialise pygame
+pygame.init()
+clock  = pygame.time.Clock()
 
 #Connect to server
 ip     = raw_input("Server ip (leave blank to host): ")
 port   = input("Server port: ")
 if( ip != "" ):
-  socket = connect(ip,port,event)
-  if not socket:
-    print "Error: server connection failed"
-    sys.exit()
+  interface  = client.Client(ip,port,event)
 else:
-  server = Server(port,event)
-  socket = connect("127.0.0.1",port,event)
+  mapManager = map.Map(*common.mapSize)
+  interface  = server.Server(port,event, mapManager)
 
-#Set up pygame window
-mapSize = (20, 10)
-pygame.init()
-window = pygame.display.set_mode((64*mapSize[0],64*mapSize[1]),pygame.RESIZABLE)
-pygame.display.set_caption("XenoHarvest")
-clock  = pygame.time.Clock()
+eventManager.register("transmit", interface.transmit)
+eventManager.register("cmdRecv",  core.execute)
 
-#Set up game
-units     = pygame.sprite.Group()
-buildings = pygame.sprite.Group() ##Testing
-map       = Map(mapSize[0], mapSize[1], buildings)
-interface = Interface(socket,event,map,units, buildings)
-render    = Renderer(window, event, map, units, buildings)
-event.register("update", units.update)
-
-#Start running
-running = True
-
+##DEBUG
 def test(s):
   print s
  
-event.register("cmdRecv", test)
+eventManager.register("cmdRecv", test)
+##END
 
-#Main loop
+
+running = True
+
 while running:
-  for e in pygame.event.get():
-    if e.type == QUIT:
-      disconnect(socket)
-      pygame.quit()
-      sys.exit()
-    elif e.type == VIDEORESIZE:
-      pygame.display.set_mode((e.size),pygame.RESIZABLE)
-    elif e.type == MOUSEBUTTONDOWN:
-      inputs.registerClick(e.pos, e.button, True)
-    elif e.type == MOUSEBUTTONUP:
-      inputs.registerClick(e.pos, e.button, False)
-    elif e.type == KEYDOWN:
-      inputs.registerKey(e.key, True)
-    elif e.type == KEYUP:
-      inputs.registerKey(e.key, False)
-  
-  pygame.display.update()
-  event.update()
-  event.notify("update")
+  core.checkPygameEvents()
+  eventManager.notify("update")
+  eventManager.update()
+  if window:
+    pygame.display.update()
   clock.tick(30)

@@ -1,103 +1,103 @@
-import socket
-import sys
+import socket,sys
+import common
 from thread import *
 
-class Player:
-  def __init__(self):
-    self.id = -1
-    self.x  = 0
-    self.y  = 0
+class PlayerConn:
+  def __init__(self,conn,server,id=-1):
+    self.id     = id
+    self.conn   = conn
+    self.server = server
+    self.ready  = False
+
+    self.send("c",player.id)
+    server.broadcast("a",player.id)
+
+  def update(self):
+    data = self.conn.recv(common.packetSize)
+    if data != "":
+      commands = common.parse(data)
+      for cmd,params in commands:
+        server.broadcast(cmd,self.id,*params)
+
+  def send(self,cmd,*params):
+    data = common.package(cmd,params)
+    self.conn.sendall(data)
 
 class Server:
-  def __init__(self, port, event):
+  def __init__(self, port, event, map):
     self.player_count = 0
-    self.connections = []
-    self.event = event
-
-    self.socket = initSocket();
+    self.connections  = []
+    self.event        = event
+    self.socket       = self._initSocket();
+    self.map          = map
     
     start_new_thread(self.listen, (self.socket, ))
     
     
-  def listen(self,socket):
+  def listen(self, socket):
     while True:
       #wait to accept a connection - blocking call
       conn, addr = socket.accept()
       print 'New player connected with ' + addr[0] + ':' + str(addr[1])
      
-      #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
-      self.connections.append(conn)
+      self.connections.append(PlayerConn(conn,self,player_count))
       self.player_count += 1
-      start_new_thread(self.clientThread ,(conn,))
    
     s.close()
-      
- 
-  def parse(self,data,player):
-    cmd = data[0]
-    msg = data[1:]
 
-    if cmd == 't':
-      print "[Player "+str(player.id+1)+"] "+msg
-      self.broadcast("t"+str(player.id)+","+msg)
-    elif cmd == 'm':
-      params = msg.split(',')
-      if params >= 2:
-        print "[Player "+str(player.id+1)+" > "+params[0]+","+params[1]+"]"
-        self.event.notify("serverMove", player.id, params[0],params[1])
-        self.broadcast("m"+str(player.id)+","+params[0]+","+params[1])
-    elif cmd == 'b':
-      params = msg.split(',')
-      if params >= 2:
-        self.event.notify("serverBuild",params[0],params[1],params[2])
-        self.broadcast("b"+params[0]+","+params[1]+","+params[2])
+#  def receive(self,player,cmd,params):
+#
+#    if cmd == 't':
+#      self.broadcast("t",player.id,params[0])
+#    elif cmd == 'm':
+#      if params >= 2:
+#        self.broadcast("m",player.id,*params)
+#    elif cmd == 'b':
+#      params = msg.split(',')
+#      if params >= 2:
+#        self.event.notify("serverBuild",params[0],params[1],params[2])
+#        self.broadcast("b"+params[0]+","+params[1]+","+params[2])
 
-  def broadcast(self,data):
-    data = data+';'
-    for i in self.connections:
-      if i != 0:
-        i.sendall(data)
+  def broadcast(self,cmd,*params):
+    self.event.notify("cmdRecv",cmd,*params)
+    for player in self.connections:
+      if player.id >= 0:
+        player.send(cmd,*params)
 
   #Function for handling connections. This will be used to create threads
-  def clientThread(self,conn):
-    player = Player()
-    player.id = self.player_count - 1
-    conn.sendall("c"+str(player.id)+";")
-    self.broadcast("a"+str(player.id)+","+str(player.x)+","+str(player.y))
-    
-    for i in self.connections:
-      if i != 0:
-        pass
+#  def clientThread(self,conn):
+#    player = Player()
+#    player.id = self.player_count - 1
+#    conn.sendall("c"+str(player.id)+";")
+#    self.broadcast("a"+str(player.id)+","+str(player.x)+","+str(player.y))
+#    
+#    for i in self.connections:
+#      if i != 0:
+#        pass
        
     #infinite loop so that function do not terminate and thread do not end.
-    while True:     
-      #Receiving from client
-      data = conn.recv(1024)
-      if not data:
-        break
-      cmds = data.split(';')
-      for i in cmds:
-        self.parse(i,player)
           
     #came out of loop
-    conn.close()
+#    conn.close()
 
-def initSocket():
-  HOST = ''   # Symbolic name meaning all available interfaces
-  PORT = 8888 # Arbitrary non-privileged port
+  def _initSocket(self):
+    HOST = ''   # Symbolic name meaning all available interfaces
+    PORT = 8888 # Arbitrary non-privileged port
  
-  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-  #Bind socket to local host and port
-  try:
-    s.bind((HOST, PORT))
-  except socket.error , msg:
-    print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
-    sys.exit()
+    #Bind socket to local host and port
+    try:
+      s.bind((HOST, PORT))
+    except socket.error , msg:
+      print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+      sys.exit()
    
-  #Start listening on socket
-  s.listen(8)
-  print 'Socket initialised'
-  return s
+    #Start listening on socket
+    s.listen(8)
+    print 'Socket initialised'
+    return s
 
+  def transmit(self,cmd,*params):
+    self.broadcast(cmd,0,params)

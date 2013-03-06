@@ -3,12 +3,12 @@ import os
 from common import toPixels
 
 class Unit(pygame.sprite.Sprite):
-  def __init__(self,x,y,event,map,image):
+  def __init__(self,x,y,event,pather,image):
     pygame.sprite.Sprite.__init__(self)
     self.path     = []
     self.target   = (x,y)
     self.event    = event
-    self.map      = map
+    self.pather   = pather
     self.image    = image
     self.baseImage= self.image
     self.rect     = self.baseImage.get_rect()
