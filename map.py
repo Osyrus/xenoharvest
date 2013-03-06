@@ -5,7 +5,7 @@ class Map:
   def __init__(self, a, b=None):
   
     self.tiles  = []
-    self.tileMap = ['1','2','3','4','5','6','7','8','9']
+    self.tileMap = ['0','1','2','3','4','5','6','7','8','9']
     
     if b == None:
       # Single string to load from has been passed
@@ -46,6 +46,7 @@ class Map:
     for y in range(self.height):
       temp = ""
       for x in range(self.width):
+        print(str(x)+","+str(y))
         temp += self.tileMap[self.getTile(x,y)]
       ret += (temp,)
     return ret

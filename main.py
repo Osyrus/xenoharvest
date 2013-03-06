@@ -4,7 +4,7 @@ from pygame.locals import *
 
 
 #Initialise game objects
-game          = core.Core()
+game = core.Core()
 
 #Initialise pygame
 pygame.init()
@@ -37,6 +37,6 @@ while True:
   game.checkPygameEvents()
   game.event.notify("update")
   game.event.update()
-  if running:
+  if game.running:
     pygame.display.update()
   clock.tick(30)

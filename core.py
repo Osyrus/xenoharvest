@@ -30,8 +30,6 @@ class Core:
     if self.ready:
       self.event.notify("transmit","w",*self.map.toString())
       self.start()
-    else:
-      print("NOT LOADED")
 
   def checkPygameEvents(self):
     for e in pygame.event.get():
@@ -56,13 +54,14 @@ class Core:
     elif cmd == 'm':
       self.event.notify("playerMove",*params)
     elif cmd == 'a':
-      self.units.add(unit.Player(params[1],params[2],params[0],self.event,self.pather))
+      self.units.add(unit.Player(params[0],params[1],params[2],self.event,self.pather))
     elif cmd == 'b':
       self.buildings.add(towers.towerType(*params[1:]))
     elif cmd == 'w':
       self.loadMap(params)
 
   def generateMap(self):
+    print("MAP GENERATED")
     self.map    = map.Map(*common.mapSize)
     self.pather = path.Path(self.map, self.units, self.buildings)
     self.ready  = True
