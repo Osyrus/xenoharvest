@@ -6,7 +6,10 @@ class Map:
   
     self.tiles  = []
     self.tileMap = ['0','1','2','3','4','5','6','7','8','9']
-    
+    self.numTiles = 10
+    self.tileWeighting = [50, 50, 50, 50, 50, 2, 1, 5, 4, 1]
+    self.passable = [True, True, True, True, True, False, False, False, False, False]
+
     if b == None:
       # Single string to load from has been passed
       (self.width,self.height) = self.load(a)
@@ -15,9 +18,6 @@ class Map:
       self.width = a
       self.height = b
       
-      self.numTiles = 10
-      self.tileWeighting = [50, 50, 50, 50, 50, 2, 1, 5, 4, 1]
-      self.passable = [True, True, True, True, True, False, False, False, False, False]
       self._normWeight(self.tileWeighting)
 
       self.fill()
@@ -32,19 +32,19 @@ class Map:
       self.tiles.append(temp)
       
   def load(self, rows):
-    for row in rows:
+    for row in rows[1:]:
       if row != "":
         temp = []
-        for char in row:
+        for char in row[1:]:
           temp.append(self.tileMap.index(char))
-        map.append(temp)
+        self.tiles.append(temp)
 
-    return (len(map[0]),len(map))
+    return (len(self.tiles[0]),len(self.tiles))
 
   def toString(self):
     ret = ()
     for y in range(self.height):
-      temp = ""
+      temp = "r"
       for x in range(self.width):
         print(str(x)+","+str(y))
         temp += self.tileMap[self.getTile(x,y)]

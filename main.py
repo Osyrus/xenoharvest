@@ -35,10 +35,9 @@ game.event.register("cmdRecv", test)
 ##END
 
 while True:
-  print("Tick")
   game.checkPygameEvents()
   game.event.notify("update")
   game.event.update()
   if game.running:
     pygame.display.update()
-  clock.tick(30)    
+  clock.tick(30)

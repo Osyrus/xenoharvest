@@ -13,7 +13,6 @@ class Client:
   def listen(self):
     while self.connected:
       data = self.socket.recv(common.packetSize)
-      print("update")
       for cmd,params in common.parse(data):
         print(cmd)
         self.event.notify("cmdRecv", cmd, *params)

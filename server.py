@@ -8,18 +8,22 @@ class PlayerConn:
     self.conn   = conn
     self.server = server
     self.ready  = False
+    self.connected = True
 
     self.send("c",self.id)
     server.broadcast("a",0,0,self.id)
+    start_new_thread(self.listen,())
 
-  def update(self):
-    data = self.conn.recv(common.packetSize)
-    if data != "":
-      commands = common.parse(data)
-      for cmd,params in commands:
-        server.broadcast(cmd,self.id,*params)
+  def listen(self):
+    while self.connected:
+      data = self.conn.recv(common.packetSize)
+      if data != "":
+        commands = common.parse(data)
+        for cmd,params in commands:
+          server.broadcast(cmd,self.id,*params)
 
   def send(self,cmd,*params):
+    print("SENDING "+cmd+" TO PLAYER "+str(self.id+1))
     data = common.package(cmd,params)
     self.conn.sendall(data)
 
@@ -41,12 +45,11 @@ class Server:
      
       self.connections.append(PlayerConn(conn,self,self.player_count))
       self.player_count += 1
-
+    print("SEND MAP TIME")
     self.event.notify("sendMap")
 
   def update(self):
-    for player in self.connections:
-      player.update()
+    pass
     
 #  def receive(self,player,cmd,params):
 #
