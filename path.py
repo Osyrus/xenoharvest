@@ -12,10 +12,10 @@
 class Path:
   #At this point it needs to be passed the map object containing the indices of each tile,
   #but will likely later need to know building positions as well.
-  def __init__(self, map, units, buildings):
+  def __init__(self, mapManager, units, buildings):
     #Pull the width and height of the map object and associate the values to itself
-    self.map                = map
-    self.height, self.width = map.getHeight(), map.getWidth()
+    self.map                = mapManager
+    self.height, self.width = self.map.getHeight(), self.map.getWidth()
     self.buildings          = buildings
     self.units              = units
 

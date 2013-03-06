@@ -1,11 +1,15 @@
 import pygame
+import common,render
 
-def init(mapString):
+def loadMap(data):
   mapManager = map.Map(mapString)
-  window = pygame.display.set_mode((64*mapSize[0],64*mapSize[1]),pygame.RESIZABLE)
+  init()
+
+def init():
+  window = pygame.display.set_mode((64*common.mapSize[0],64*common.mapSize[1]),pygame.RESIZABLE)
   pygame.display.set_caption("XenoHarvest")
   renderer = render.Renderer(window, eventManager, mapManager, unitGroup, buildingGroup)
-  event.register("update", unitGroup.update)
+  eventManager.register("update", unitGroup.update)
   pather = path.Path(map, unitGroup, buildingGroup)
 
 def checkPygameEvents():
@@ -32,7 +36,7 @@ def execute(data):
       print "[Player "+str(params[0]+1)+"] "+params[1]
     elif cmd == 'm':
       if params >= 2:
-        event.notify("playerMove",int(params[0]),int(params[1]),int(params[2]))
+        eventManager.notify("playerMove",int(params[0]),int(params[1]),int(params[2]))
     elif cmd == 'a':
       units.add(Player(x,y,id,event,pather))
     elif cmd == 'b':
