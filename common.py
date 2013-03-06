@@ -13,9 +13,10 @@ def parse(input):
   ret = []
   data = input.split(";")
   for message in data:
-    cmd = message[0]
-    params = message[1:].split(',')
-    ret.append((cmd,tuple(params)))
+    if message != "":
+      cmd = message[0]
+      params = message[1:].split(',')
+      ret.append((cmd,tuple(params)))
   return ret
 
 def package(cmd,params):

@@ -20,7 +20,7 @@ class Unit(pygame.sprite.Sprite):
     self.rect.center = (x+32, y+32)
 
   def move(self,x,y):
-    self.path = self.map.getPath(self.target, (x,y))
+    self.path = self.pather.getPath(self.target, (x,y))
     
   def update(self):
     reached = True

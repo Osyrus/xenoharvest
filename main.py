@@ -7,10 +7,10 @@ def init():
   pygame.display.set_caption("XenoHarvest")
   renderer = render.Renderer(window, eventManager, mapManager, unitGroup, buildingGroup)
   eventManager.register("update", unitGroup.update)
-  pather = path.Path(mapManager, unitGroup, buildingGroup)
 
 def loadMap(data):
   mapManager = map.Map(mapString)
+  pather = path.Path(mapManager, unitGroup, buildingGroup)
   init()
 
 def checkPygameEvents():
@@ -30,18 +30,16 @@ def checkPygameEvents():
     elif e.type == KEYUP:
       inputManager.registerKey(e.key, False)
 
-def execute(data):
-  commands = common.parse(data)
-  for cmd,params in commands:
-    if cmd == 't':
-      print "[Player "+str(params[0]+1)+"] "+params[1]
-    elif cmd == 'm':
-      if params >= 2:
-        eventManager.notify("playerMove",int(params[0]),int(params[1]),int(params[2]))
-    elif cmd == 'a':
-      units.add(Player(x,y,id,eventManager,pather))
-    elif cmd == 'b':
-      buildings.add(towerType(x, y, type))
+def execute(cmd,*params):
+  if cmd == 't':
+    print "[Player "+str(params[0]+1)+"] "+params[1]
+  elif cmd == 'm':
+    if params >= 2:
+      eventManager.notify("playerMove",int(params[0]),int(params[1]),int(params[2]))
+  elif cmd == 'a':
+    units.add(Player(x,y,id,eventManager,pather))
+  elif cmd == 'b':
+    buildings.add(towerType(x, y, type))
 
 #Initialise game objects
 eventManager  = event.Event()
@@ -63,16 +61,17 @@ if( ip != "" ):
   interface  = client.Client(ip,port,event)
 else:
   mapManager = map.Map(*common.mapSize)
-  interface  = server.Server(port,event, mapManager)
-  units.add(Player(0,0,0,eventManager,mapManager))
+  interface  = server.Server(port,eventManager, mapManager)
+  pather = path.Path(mapManager, unitGroup, buildingGroup)
+  unitGroup.add(unit.Player(0,0,0,eventManager, pather))
   init()
 
 eventManager.register("transmit", interface.transmit)
 eventManager.register("cmdRecv",  execute)
 
 ##DEBUG
-def test(s):
-  print s
+def test(cmd,*params):
+  print(cmd+" "+str(params))
  
 eventManager.register("cmdRecv", test)
 ##END

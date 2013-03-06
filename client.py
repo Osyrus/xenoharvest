@@ -12,7 +12,7 @@ class Client:
     for i in data:
       if i != "":
         cmd,params = common.parse(i)
-        event.notify("cmdRecv", cmd, *params)
+        self.event.notify("cmdRecv", cmd, *params)
         
   def _initSocket(self,ip,port):
     try:

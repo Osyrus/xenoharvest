@@ -100,4 +100,4 @@ class Server:
     return s
 
   def transmit(self,cmd,*params):
-    self.broadcast(cmd,0,params)
+    self.broadcast(cmd,0,*params)
