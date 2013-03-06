@@ -1,5 +1,5 @@
 import pygame,sys
-import server,client,map,event,render,unit,inputs,path,common
+import server,client,map,event,render,unit,towers,inputs,path,common
 from pygame.locals import *
 
 def init():
@@ -37,9 +37,9 @@ def execute(cmd,*params):
     if params >= 2:
       eventManager.notify("playerMove",int(params[0]),int(params[1]),int(params[2]))
   elif cmd == 'a':
-    units.add(Player(x,y,id,eventManager,pather))
+    unitGroup.add(unit.Player(x,y,id,eventManager,pather))
   elif cmd == 'b':
-    buildings.add(towerType(x, y, type))
+    buildingGroup.add(towers.towerType(*params[1:]))
 
 #Initialise game objects
 eventManager  = event.Event()

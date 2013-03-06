@@ -3,6 +3,22 @@ from common import toPixels
 
 towerSet = pygame.image.load(os.path.join("img","tower_sheet.png"))
 
+def towerType(x, y, type):
+  if type == 1:
+    return LaserTower(x, y)
+  elif type == 2:
+    return FlameTower(x, y)
+  elif type == 3:
+    return CannonTower(x, y)
+  elif type == 4:
+    return RocketTower(x, y)
+  elif type == 5:
+    return SlowTower(x, y)
+  elif type == 6:
+    return LureTower(x, y)
+  else:
+    return None
+
 class Tower(pygame.sprite.Sprite):
   def __init__(self, x, y, type):
     pygame.sprite.Sprite.__init__(self)

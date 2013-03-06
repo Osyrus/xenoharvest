@@ -11,7 +11,7 @@ class Inputs:
     if down and button == 3:
       self.event.notify("transmit","m",x,y)
     elif down and button == 1:
-      self.event.notify("transmit","b",self.currentTower,x,y)
+      self.event.notify("transmit","b",x,y,self.currentTower)
 
   def registerKey(self, key, down):
     if down:
