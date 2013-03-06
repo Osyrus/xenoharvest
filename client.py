@@ -23,7 +23,6 @@ class Client:
       sys.exit()
 
     s.connect((ip,port))
-    start_new_thread(serverlisten ,(s,event,))
     return s
 
   def transmit(self,cmd,*params):

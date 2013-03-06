@@ -9,8 +9,8 @@ class PlayerConn:
     self.server = server
     self.ready  = False
 
-    self.send("c",player.id)
-    server.broadcast("a",player.id)
+    self.send("c",self.id)
+    server.broadcast("a",0,0,self.id)
 
   def update(self):
     data = self.conn.recv(common.packetSize)
@@ -24,27 +24,26 @@ class PlayerConn:
     self.conn.sendall(data)
 
 class Server:
-  def __init__(self, port, event, map):
-    self.player_count = 0
+  def __init__(self, port, event):
+    self.player_count = 1
     self.connections  = []
     self.event        = event
     self.socket       = self._initSocket();
-    self.map          = map
     
     start_new_thread(self.listen, (self.socket, ))
     
     
   def listen(self, socket):
-    while True:
+    while self.player_count <2:
       #wait to accept a connection - blocking call
       conn, addr = socket.accept()
       print 'New player connected with ' + addr[0] + ':' + str(addr[1])
      
-      self.connections.append(PlayerConn(conn,self,player_count))
+      self.connections.append(PlayerConn(conn,self,self.player_count))
       self.player_count += 1
-   
-    s.close()
 
+    self.event.notify("sendMap")
+    
 #  def receive(self,player,cmd,params):
 #
 #    if cmd == 't':

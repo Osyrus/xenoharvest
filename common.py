@@ -16,12 +16,17 @@ def parse(input):
     if message != "":
       cmd = message[0]
       params = message[1:].split(',')
+      for i in range(len(params)):
+        try:
+          params[i] = int(params[i])
+        except:
+          pass
       ret.append((cmd,tuple(params)))
   return ret
 
 def package(cmd,params):
   ret = cmd
   for i in params:
-    ret += ret(params)+','
+    ret += str(i)+','
   ret = ret[:-1]+';'
   return ret
