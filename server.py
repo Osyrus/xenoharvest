@@ -30,19 +30,23 @@ class Server:
     self.event        = event
     self.socket       = self._initSocket();
     
-    start_new_thread(self.listen, (self.socket, ))
+    start_new_thread(self.listen, ())
     
     
-  def listen(self, socket):
+  def listen(self):
     while self.player_count <2:
       #wait to accept a connection - blocking call
-      conn, addr = socket.accept()
+      conn, addr = self.socket.accept()
       print 'New player connected with ' + addr[0] + ':' + str(addr[1])
      
       self.connections.append(PlayerConn(conn,self,self.player_count))
       self.player_count += 1
 
     self.event.notify("sendMap")
+
+  def update(self):
+    for player in self.connections:
+      player.update()
     
 #  def receive(self,player,cmd,params):
 #

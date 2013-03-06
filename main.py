@@ -25,6 +25,7 @@ else:
 
 game.event.register("transmit", interface.transmit)
 game.event.register("cmdRecv",  game.execute)
+game.event.register("update",   interface.update)
 
 ##DEBUG
 def test(cmd,*params):
@@ -34,9 +35,10 @@ game.event.register("cmdRecv", test)
 ##END
 
 while True:
+  print("Tick")
   game.checkPygameEvents()
   game.event.notify("update")
   game.event.update()
   if game.running:
     pygame.display.update()
-  clock.tick(30)
+  clock.tick(30)    

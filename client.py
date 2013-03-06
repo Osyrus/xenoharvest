@@ -4,15 +4,22 @@ from thread  import *
 
 class Client:
   def __init__(self,ip,port,event):
-    self.event  = event
-    self.socket = self._initSocket(ip,port)
+    self.event     = event
+    self.socket    = self._initSocket(ip,port)
+    self.connected = True
 
-  def update():
-    data = socket.recv(1024).split(";")
-    for i in data:
-      if i != "":
-        cmd,params = common.parse(i)
+    start_new_thread(self.listen,())
+
+  def listen(self):
+    while self.connected:
+      data = self.socket.recv(common.packetSize)
+      print("update")
+      for cmd,params in common.parse(data):
+        print(cmd)
         self.event.notify("cmdRecv", cmd, *params)
+
+  def update(self):
+    pass
         
   def _initSocket(self,ip,port):
     try:
