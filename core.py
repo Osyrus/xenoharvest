@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-import server,client,map,event,render,unit,towers,inputs,path,common,socket
+import server,client,map,event,render,unit,towers,inputs,path,common
 
 class Core:
   def __init__(self):
@@ -12,7 +12,6 @@ class Core:
       self.running   = False
       self.pather    = None
       self.ready     = False
-      self.server    = None
 
   def start(self):
     self.window = pygame.display.set_mode((64*common.mapSize[0],64*common.mapSize[1]),pygame.RESIZABLE)
@@ -32,13 +31,9 @@ class Core:
       self.event.notify("transmit","w",*self.map.toString())
       self.start()
 
-  def setServer(self, server):
-    self.server = server
-
   def checkPygameEvents(self):
     for e in pygame.event.get():
       if e.type == QUIT:
-        socket.disconnect(self.server.getSocket())
         pygame.quit()
         sys.exit()
       elif e.type == VIDEORESIZE:
