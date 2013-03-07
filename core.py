@@ -1,4 +1,4 @@
-import pygame
+import pygame,sys
 from pygame.locals import *
 import server,client,map,event,render,unit,towers,inputs,path,common
 
@@ -33,7 +33,6 @@ class Core:
   def checkPygameEvents(self):
     for e in pygame.event.get():
       if e.type == QUIT:
-        disconnect(socket)
         pygame.quit()
         sys.exit()
       elif e.type == VIDEORESIZE:
@@ -56,6 +55,7 @@ class Core:
       self.units.add(unit.Player(params[0],params[1],params[2],self.event,self.pather))
     elif cmd == 'b':
       self.buildings.add(towers.towerType(*params[1:]))
+      self.event.notify("recheckPath",params[1],params[2])
     elif cmd == 'w':
       self.loadMap(params)
     elif cmd == 's':

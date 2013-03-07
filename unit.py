@@ -17,11 +17,18 @@ class Unit(pygame.sprite.Sprite):
     self.turnSpeed= 10
     self.x,self.y = toPixels((x, y))
 
+    self.event.register("recheckPath", self.recheck)
     self.rect.center = (x+32, y+32)
 
   def move(self,x,y):
+    #Set the unit to move towards grid square (x,y)
     self.path = self.pather.getPath(self.target, (x,y))
-    
+
+  def recheck(self,x,y):
+    #Recalculate path based on a change of passability at (x,y)
+    if (x,y) in self.path:
+      self.path = self.pather.getPath(self.target, self.path[-1])
+
   def update(self):
     reached = True
 
