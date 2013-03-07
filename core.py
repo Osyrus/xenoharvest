@@ -1,6 +1,6 @@
 import pygame,sys
 from pygame.locals import *
-import server,client,map,event,render,unit,towers,inputs,path,common
+import server,client,map,event,render,unit,towers,inputs,path,common,socket
 
 class Core:
   def __init__(self):
@@ -12,6 +12,7 @@ class Core:
       self.running   = False
       self.pather    = None
       self.ready     = False
+      self.server    = None
 
   def start(self):
     self.window   = pygame.display.set_mode((64*common.mapSize[0],64*common.mapSize[1]),pygame.RESIZABLE)
@@ -29,6 +30,9 @@ class Core:
   def sendMap(self):
     self.event.notify("transmit","w",*self.map.toString())
     self.event.notify("transmit","r")
+
+  def setServer(self, server):
+    self.server = server
 
   def checkPygameEvents(self):
     for e in pygame.event.get():
