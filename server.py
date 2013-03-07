@@ -20,7 +20,7 @@ class PlayerConn:
       if data != "":
         commands = common.parse(data)
         for cmd,params in commands:
-          server.broadcast(cmd,self.id,*params)
+          self.server.broadcast(cmd,self.id,*params)
 
   def send(self,cmd,*params):
     print("SENDING "+cmd+" TO PLAYER "+str(self.id+1))
