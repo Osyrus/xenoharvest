@@ -23,6 +23,8 @@ else:
   game.event.register("sendMap", game.sendMap)
   print("Waiting for player 2...")
 
+game.setServer(interface)
+
 game.event.register("transmit", interface.transmit)
 game.event.register("cmdRecv",  game.execute)
 game.event.register("update",   interface.update)
