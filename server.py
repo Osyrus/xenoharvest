@@ -81,9 +81,6 @@ class Server:
 
   def update(self):
     pass
-
-  def getSocket(self):
-    return self.socket
     
 #  def receive(self,player,cmd,params):
 #
