@@ -24,7 +24,6 @@ else:
 
 game.event.register("transmit", interface.transmit)
 game.event.register("cmdRecv",  game.execute)
-game.event.register("update",   interface.update)
 
 ##DEBUG
 def test(cmd,*params):

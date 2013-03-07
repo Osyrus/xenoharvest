@@ -10,9 +10,11 @@ class PlayerInterface:
     self.server    = server
 
   def send(self,cmd,*params):
+    #Placeholder function, defined individually for local/remote
     pass
 
   def execute(self,commands):
+    #Execute each command (tuple(cmd,params)) in array
     for cmd,params in commands:
       if cmd in "mb":
         self.server.broadcast(cmd,self.id,*params)
@@ -20,7 +22,6 @@ class PlayerInterface:
         self.server.broadcast(cmd,*params)
       elif cmd == "r":
         self.ready = True
-        print("READY - "+str(self.id))
         self.server.playerReady()
 
 class PlayerLocal(PlayerInterface):
@@ -29,6 +30,7 @@ class PlayerLocal(PlayerInterface):
     self.event = event
 
   def send(self,cmd,*params):
+    #Communicate with local player directly through events
     self.event.notify("cmdRecv",cmd,*params)
 
 class PlayerRemote(PlayerInterface):
@@ -41,14 +43,15 @@ class PlayerRemote(PlayerInterface):
     start_new_thread(self.listen,())
 
   def listen(self):
+    #Secondary thread, waits for packets, then parses and executes
     while self.connected:
       data = self.conn.recv(common.packetSize)
       if data != "":
-        print("RECV: "+data)
         commands = common.parse(data)
         self.execute(commands)
 
   def send(self,cmd,*params):
+    #Send command as a string via network to remote client (triggers "cmdRecv")
     data = common.package(cmd,params)
     self.conn.sendall(data)
 
@@ -63,6 +66,7 @@ class Server:
     start_new_thread(self.listen, ())
   
   def addPlayer(self,conn=None):
+    #Add a new player connection. If conn passed in, remote player, if not, local
     if conn:
       self.connections.append(PlayerRemote(self.player_count,self,conn))
     else:
@@ -70,8 +74,8 @@ class Server:
     self.player_count += 1 
     
   def listen(self):
+    #Secondary thread, waits for new player connections then stores them
     while self.player_count <2:
-      #wait to accept a connection - blocking call
       conn, addr = self.socket.accept()
       print 'New player connected with ' + addr[0] + ':' + str(addr[1])
       self.addPlayer(conn)
@@ -79,28 +83,14 @@ class Server:
 
     self.event.notify("sendMap")
 
-  def update(self):
-    pass
-    
-#  def receive(self,player,cmd,params):
-#
-#    if cmd == 't':
-#      self.broadcast("t",player.id,params[0])
-#    elif cmd == 'm':
-#      if params >= 2:
-#        self.broadcast("m",player.id,*params)
-#    elif cmd == 'b':
-#      params = msg.split(',')
-#      if params >= 2:
-#        self.event.notify("serverBuild",params[0],params[1],params[2])
-#        self.broadcast("b"+params[0]+","+params[1]+","+params[2])
-
   def broadcast(self,cmd,*params):
+    #Send a command to each player
     for player in self.connections:
       if player.id >= 0:
         player.send(cmd,*params)
 
   def _initSocket(self):
+    #Initialise network socket
     HOST = ''   # Symbolic name meaning all available interfaces
     PORT = 8888 # Arbitrary non-privileged port
  
@@ -120,8 +110,6 @@ class Server:
     return s
 
   def transmit(self,cmd,*params):
-    #commands = []
-    #commands.append(cmd,*params)
     self.connections[0].execute([(cmd,params)])
 
   def playerReady(self):
