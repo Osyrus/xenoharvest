@@ -14,22 +14,21 @@ class Core:
       self.ready     = False
 
   def start(self):
-    self.window = pygame.display.set_mode((64*common.mapSize[0],64*common.mapSize[1]),pygame.RESIZABLE)
+    self.window   = pygame.display.set_mode((64*common.mapSize[0],64*common.mapSize[1]),pygame.RESIZABLE)
     pygame.display.set_caption("XenoHarvest")
     self.renderer = render.Renderer(self.window, self.event, self.map, self.units, self.buildings)
     self.event.register("update", self.units.update)
-    self.running = True
+    self.running  = True
 
   def loadMap(self,data):
     if not self.map:
       self.map = map.Map(data)
       self.pather = path.Path(self.map, self.units, self.buildings)
-      self.start()
+      self.event.notify("transmit","r")
 
   def sendMap(self):
-    if self.ready:
-      self.event.notify("transmit","w",*self.map.toString())
-      self.start()
+    self.event.notify("transmit","w",*self.map.toString())
+    self.event.notify("transmit","r")
 
   def checkPygameEvents(self):
     for e in pygame.event.get():
@@ -49,7 +48,7 @@ class Core:
         self.input.registerKey(e.key, False)
 
   def execute(self,cmd,*params):
-    if cmd == 't':
+    if cmd   == 't':
       print "[Player "+str(params[0]+1)+"] "+params[1]
     elif cmd == 'm':
       self.event.notify("playerMove",*params)
@@ -59,9 +58,10 @@ class Core:
       self.buildings.add(towers.towerType(*params[1:]))
     elif cmd == 'w':
       self.loadMap(params)
+    elif cmd == 's':
+      self.start()
 
   def generateMap(self):
     print("MAP GENERATED")
     self.map    = map.Map(*common.mapSize)
     self.pather = path.Path(self.map, self.units, self.buildings)
-    self.ready  = True

@@ -2,50 +2,81 @@ import socket,sys
 import common
 from thread import *
 
-class PlayerConn:
-  def __init__(self,conn,server,id=-1):
-    self.id     = id
+class PlayerInterface:
+  def __init__(self,id,server):
+    self.id        = id
+    self.ready     = False
+    self.connected = True
+    self.server    = server
+
+  def send(self,cmd,*params):
+    pass
+
+  def execute(self,commands):
+    for cmd,params in commands:
+      if cmd in "mb":
+        self.server.broadcast(cmd,self.id,*params)
+      elif cmd in "w":
+        self.server.broadcast(cmd,*params)
+      elif cmd == "r":
+        self.ready = True
+        print("READY - "+str(self.id))
+        self.server.playerReady()
+
+class PlayerLocal(PlayerInterface):
+  def __init__(self,id,server,event):
+    PlayerInterface.__init__(self,id,server)
+    self.event = event
+
+  def send(self,cmd,*params):
+    self.event.notify("cmdRecv",cmd,*params)
+
+class PlayerRemote(PlayerInterface):
+  def __init__(self,id,server,conn):
+    PlayerInterface.__init__(self,id,server)
     self.conn   = conn
     self.server = server
-    self.ready  = False
-    self.connected = True
 
     self.send("c",self.id)
-    server.broadcast("a",0,0,self.id)
     start_new_thread(self.listen,())
 
   def listen(self):
     while self.connected:
       data = self.conn.recv(common.packetSize)
       if data != "":
+        print("RECV: "+data)
         commands = common.parse(data)
-        for cmd,params in commands:
-          server.broadcast(cmd,self.id,*params)
+        self.execute(commands)
 
   def send(self,cmd,*params):
-    print("SENDING "+cmd+" TO PLAYER "+str(self.id+1))
     data = common.package(cmd,params)
     self.conn.sendall(data)
 
 class Server:
   def __init__(self, port, event):
-    self.player_count = 1
+    self.player_count = 0
     self.connections  = []
     self.event        = event
     self.socket       = self._initSocket();
-    
+
+    self.addPlayer() #Add the local player    
     start_new_thread(self.listen, ())
-    
+  
+  def addPlayer(self,conn=None):
+    if conn:
+      self.connections.append(PlayerRemote(self.player_count,self,conn))
+    else:
+      self.connections.append(PlayerLocal(self.player_count,self,self.event))
+    self.player_count += 1 
     
   def listen(self):
     while self.player_count <2:
       #wait to accept a connection - blocking call
       conn, addr = self.socket.accept()
       print 'New player connected with ' + addr[0] + ':' + str(addr[1])
-     
-      self.connections.append(PlayerConn(conn,self,self.player_count))
-      self.player_count += 1
-    print("SEND MAP TIME")
+      self.addPlayer(conn)
+    print("Connected! Game Loading")
+
     self.event.notify("sendMap")
 
   def update(self):
@@ -65,26 +96,9 @@ class Server:
 #        self.broadcast("b"+params[0]+","+params[1]+","+params[2])
 
   def broadcast(self,cmd,*params):
-    self.event.notify("cmdRecv",cmd,*params)
     for player in self.connections:
       if player.id >= 0:
         player.send(cmd,*params)
-
-  #Function for handling connections. This will be used to create threads
-#  def clientThread(self,conn):
-#    player = Player()
-#    player.id = self.player_count - 1
-#    conn.sendall("c"+str(player.id)+";")
-#    self.broadcast("a"+str(player.id)+","+str(player.x)+","+str(player.y))
-#    
-#    for i in self.connections:
-#      if i != 0:
-#        pass
-       
-    #infinite loop so that function do not terminate and thread do not end.
-          
-    #came out of loop
-#    conn.close()
 
   def _initSocket(self):
     HOST = ''   # Symbolic name meaning all available interfaces
@@ -106,4 +120,16 @@ class Server:
     return s
 
   def transmit(self,cmd,*params):
-    self.broadcast(cmd,0,*params)
+    #commands = []
+    #commands.append(cmd,*params)
+    self.connections[0].execute([(cmd,params)])
+
+  def playerReady(self):
+    ready = True
+    for player in self.connections:
+      if not player.ready:
+        ready = False
+    if ready:
+      for player in self.connections:
+        self.broadcast("a",player.id,0,player.id)
+      self.broadcast("s")

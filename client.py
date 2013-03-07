@@ -32,4 +32,4 @@ class Client:
     return s
 
   def transmit(self,cmd,*params):
-    socket.sendall(common.package(cmd,params))
+    self.socket.sendall(common.package(cmd,params))

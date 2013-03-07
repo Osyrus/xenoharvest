@@ -19,7 +19,6 @@ if( ip != "" ):
 else:
   interface  = server.Server(port,game.event)
   game.generateMap()
-  game.units.add(unit.Player(0,0,0,game.event, game.pather))
   game.event.register("sendMap", game.sendMap)
   print("Waiting for player 2...")
 

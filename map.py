@@ -32,7 +32,7 @@ class Map:
       self.tiles.append(temp)
       
   def load(self, rows):
-    for row in rows[1:]:
+    for row in rows:
       if row != "":
         temp = []
         for char in row[1:]:

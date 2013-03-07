@@ -26,7 +26,8 @@ def parse(input):
 
 def package(cmd,params):
   ret = cmd
-  for i in params:
-    ret += str(i)+','
-  ret = ret[:-1]+';'
-  return ret
+  if len(params)>0:
+    for i in params:
+      ret += str(i)+','
+    ret = ret[:-1]
+  return ret+";"
