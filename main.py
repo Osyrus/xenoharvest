@@ -13,7 +13,11 @@ running = False
 
 #Connect to server
 ip     = raw_input("Server ip (leave blank to host): ")
-port   = input("Server port: ")
+#Get the port (don't accept a blank input)
+port = ""
+while port == "":
+  port = raw_input("Server port: ")
+#Start up client or server
 if( ip != "" ):
   interface  = client.Client(ip,port,game.event)
 else:
